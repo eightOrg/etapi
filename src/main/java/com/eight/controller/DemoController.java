@@ -1,6 +1,7 @@
 package com.eight.controller;
 
 import com.eight.trundle.Constants;
+import com.eight.trundle.annotations.LogMsg;
 import com.eight.trundle.handle.HandleTemplet;
 import com.eight.trundle.ob.BaseOb;
 import com.eight.trundle.params.ParamUtil;
@@ -24,7 +25,7 @@ public class DemoController {
     private Logger logger = LoggerFactory.getLogger(DemoController.class);
     private String demoAddress = EventBusAddress.EBDemo;
 
-
+    @LogMsg("test")
     @RouteMapping(method = RouteMethod.GET)
     public Handler<RoutingContext> demoMethod(){
         String method = "demoMethod";

@@ -81,4 +81,13 @@
         -->
     </context:component-scan>
     <aop:aspectj-autoproxy proxy-target-class="true" />
+
+    <!-- 拦截器，用以记录日志，要求被记录日志的方法有 @LogMsg 注解 -->
+    <!--<mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.eight.MonitorInterceptor"/>
+        </mvc:interceptor>
+
+    </mvc:interceptors>-->
 </beans>

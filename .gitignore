@@ -2,3 +2,7 @@
 .gitignore
 .idea/
 target/maven-status
+.vertx/
+file-uploads/
+target/classes/com/eight/MonitorInterceptor.class
+target/generated-sources/

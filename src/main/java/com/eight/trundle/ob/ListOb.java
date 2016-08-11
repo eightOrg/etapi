@@ -8,24 +8,21 @@ import java.util.List;
 /**
  * Created by miaoch on 2016/4/5.
  */
-public class ListOb<T extends Identifiable> extends BaseOb {
+public class ListOb<T> extends BaseOb {
 
     private int total;     //共多少条
     private int count;     //每页多少条
     private int pagetotal;     //共多少页
     private boolean hasNextPage; //有下一页
     private boolean hasPrePage; //有上一页
-
     private int nopage;  //第几页
-
-
-    private List<T> listob;
+    private List<T> ob;
 
     public ListOb() {
     }
 
-    public ListOb(List<T> listob) {
-        this.listob = listob;
+    public ListOb(List<T> ob) {
+        this.ob = ob;
     }
     public boolean isHasNextPage() {
         return hasNextPage;
@@ -44,13 +41,12 @@ public class ListOb<T extends Identifiable> extends BaseOb {
     }
 
     public List<T> getListob() {
-        return listob;
+        return ob;
     }
 
     public void setListob(List<T> listob) {
-        this.listob = listob;
+        this.ob = listob;
     }
-
 
     public int getTotal() {
         return total;
@@ -85,13 +81,11 @@ public class ListOb<T extends Identifiable> extends BaseOb {
     }
 
     public void setPage(Paginator p) {
-
         total = p.getTotalCount();     //共多少条
         count = p.getLimit();     //每页多少条
         pagetotal = p.getTotalPages();     //共多少页
         nopage = p.getPage();  //第几页
         hasNextPage = p.isHasNextPage(); //有下一页
         hasPrePage = p.isHasPrePage(); //有上一页
-
     }
 }

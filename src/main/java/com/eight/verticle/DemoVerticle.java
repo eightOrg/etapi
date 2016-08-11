@@ -2,6 +2,7 @@ package com.eight.verticle;
 
 import com.eight.pojo.Demo;
 import com.eight.service.DemoService;
+import com.eight.trundle.Constants;
 import com.eight.trundle.db.pojo.Identifiable;
 import com.eight.trundle.ob.BaseOb;
 import com.eight.trundle.vertx.EventBusAddress;
@@ -36,9 +37,7 @@ public class DemoVerticle<T extends Identifiable> extends AbstractVerticle {
                 msg.reply(json);
             } catch (Exception e) {
                 e.printStackTrace();
-                result.setMsg("数据处理失败！");
-                result.setFlag(false);
-                result.setCode(500);
+                result = BaseOb.getFaildOb();
                 logger.error("method："+method+";错误信息："+e.getMessage());
                 msg.reply(new JsonObject(Json.encode(result)));
             }

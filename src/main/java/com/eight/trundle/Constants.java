@@ -16,6 +16,11 @@ public class Constants {
 	public static final String STATE_OK = "0";//正常
 	public static final String STATE_DELETE = "1";//删除
 	public static final String STATE_LOCKED = "2";//锁定
+	//服务器响应code
+	public static final TreeMap<Integer, String> CODEMAP = new TreeMap<Integer, String>();
+	public static final int CODE_OK = 200;//正常
+	public static final int CODE_LOSE = 403;//验证失败
+	public static final int CODE_FAILD = 500;//请求失败
 	//session里保存用户对象
 	public static final String SESSION_USER = "SESSION_USER";
 	//session里保存用户的资源
@@ -44,6 +49,10 @@ public class Constants {
 		STATEMAP.put(STATE_OK, "正常");
 		STATEMAP.put(STATE_LOCKED, "锁定");
 		STATEMAP.put(STATE_DELETE, "删除");
+		//服务器响应code
+		CODEMAP.put(CODE_OK, "请求成功");
+		CODEMAP.put(CODE_LOSE, "验证失败");
+		CODEMAP.put(CODE_FAILD, "请求失败");
 	}
 
 }

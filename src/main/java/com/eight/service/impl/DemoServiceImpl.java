@@ -2,9 +2,11 @@ package com.eight.service.impl;
 
 import com.eight.pojo.Demo;
 import com.eight.trundle.db.pojo.Identifiable;
+import com.eight.trundle.ob.BaseOb;
 import com.eight.trundle.ob.ListOb;
 import com.eight.dao.DemoMapper;
 import com.eight.service.DemoService;
+import com.eight.trundle.ob.OneOb;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import io.vertx.core.json.Json;
@@ -38,5 +40,24 @@ public class DemoServiceImpl implements DemoService {
         ob.setListob(result);
         ob.setPage(result.getPaginator());
         return new JsonObject(Json.encode(ob));
+    }
+
+    @Override
+    public JsonObject blockingMethod(JsonObject params) {
+        BaseOb ob;
+        if (params.containsKey("token") && params.getString("token").equals("1")) {
+            ob = new BaseOb();
+        } else {
+            ob = BaseOb.getFaildOb();
+            ob.setMsg("默认拦截token不为1的请求，不允许使用接口");
+        }
+        return new JsonObject(Json.encode(ob));
+    }
+
+    @Override
+    public JsonObject login(JsonObject params) {
+       return params.containsKey("username") && params.getString("username").equals("hange")
+               ?new JsonObject(Json.encode(new BaseOb()))
+               :new JsonObject(Json.encode(BaseOb.getFaildOb()));
     }
 }

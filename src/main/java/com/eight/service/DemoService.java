@@ -9,4 +9,6 @@ import io.vertx.core.json.JsonObject;
  */
 public interface DemoService {
     JsonObject demoMethod(JsonObject params);
+    JsonObject blockingMethod(JsonObject params);
+    JsonObject login(JsonObject params);
 }

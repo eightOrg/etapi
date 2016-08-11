@@ -1,6 +1,7 @@
 package com.eight.verticle;
 
 
+import com.eight.controller.DemoController;
 import com.eight.trundle.Constants;
 import com.eight.trundle.annotations.RouteHandler;
 import com.eight.trundle.annotations.RouteMapping;
@@ -16,8 +17,6 @@ import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CookieHandler;
 import io.vertx.ext.web.handler.CorsHandler;
-import io.vertx.ext.web.sstore.LocalSessionStore;
-import io.vertx.ext.web.sstore.SessionStore;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,18 +30,20 @@ import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;
 public class HttpServerVerticle extends AbstractVerticle {
     private static final Logger log = LoggerFactory.getLogger(HttpServerVerticle.class);
     private static final Reflections reflections = new Reflections(Constants.ROUTE_REFLECTIONS);
-    SessionStore store;
+    private DemoController demo = new DemoController();
 
     protected Router router;
     Logger logger = LoggerFactory.getLogger(HttpServerVerticle.class);
     HttpServer server;
+
+    public HttpServerVerticle(){
+    }
 
     @Override
     public void start(Future<Void> future) throws Exception {
 
         logger.info("==============web start==============");
         super.start();
-        store = LocalSessionStore.create(vertx);
         server = vertx.createHttpServer(createOptions());
         server.requestHandler(createRouter()::accept);
         server.listen(result -> {
@@ -100,6 +101,13 @@ public class HttpServerVerticle extends AbstractVerticle {
         router.route().handler(CorsHandler.create("*").allowedMethods(method));
         router.route().handler(BodyHandler.create());
         router.route().handler(CookieHandler.create());
+
+        //此处填写不需要验证和手动注册的接口
+        router.get("/login").handler(demo::login);
+        router.get("/blockingMethod").handler(demo::blockingMethod);
+        //拦截/demo下的请求
+        router.get("/demo/*").blockingHandler(demo::blockingMethod);
+        router.post("/demo/*").blockingHandler(demo::blockingMethod);
         registerHandlers();
         return router;
     }

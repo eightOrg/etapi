@@ -1,23 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="
-     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
-     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-     http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
-     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
-     http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd">
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+        xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:mvc="http://www.springframework.org/schema/mvc"
+        xsi:schemaLocation="
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+            http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
+            http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+    <!--<bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
-                <value>classpath:jdbc.properties</value>
+                <value>classpath:/jdbc.properties</value>
             </list>
         </property>
-    </bean>
+    </bean>-->
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"  >
 
         <property name="username" value="root"/>
@@ -36,7 +39,7 @@
         <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
         <property name="minEvictableIdleTimeMillis" value="300000"/>
 
-        <property name="validationQuery" value="${validationQuery}"/>
+        <property name="validationQuery" value="SELECT 1 FROM DUAL"/>
         <property name="testWhileIdle" value="true"/>
         <property name="testOnBorrow" value="false"/>
         <property name="testOnReturn" value="false"/>
@@ -55,11 +58,11 @@
         <property name="dataSource" ref="dataSource"/>
         <property name="configLocation" value="classpath:mybatis/mybatis-config.xml"/>
         <property name="mapperLocations" value="classpath*:mybatis/mapper/*.xml"/>
-        <property name="typeAliasesPackage" value="com.demo.dao"/>
+        <property name="typeAliasesPackage" value="com.eight.dao"/>
         <property name="typeAliases" value="org.springframework.util.LinkedCaseInsensitiveMap"/>
     </bean>
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.demo.dao"/>
+        <property name="basePackage" value="com.eight.dao"/>
         <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
     </bean>
 
@@ -72,10 +75,58 @@
     <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" order="100" />
 
     <!-- 自动扫描，多个包以 逗号分隔  -->
-    <context:component-scan base-package="com.demo">
+    <context:component-scan base-package="com.eight">
         <!--
-        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:exclude-filter type="annotations" expression="org.springframework.stereotype.Controller"/>
         -->
     </context:component-scan>
     <aop:aspectj-autoproxy proxy-target-class="true" />
+
+    <!-- 拦截器，用以记录日志，要求被记录日志的方法有 @LogMsg 注解 -->
+    <!--<mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.eight.MonitorInterceptor"/>
+        </mvc:interceptor>
+
+    </mvc:interceptors>-->
+
+    <!-- 扫描文件 只扫描controller -->
+    <context:component-scan base-package="com.eight">
+        <context:include-filter type="annotation"
+                                expression="org.springframework.stereotype.Controller" />
+        <context:exclude-filter type="annotation"
+                                expression="org.springframework.stereotype.Service" />
+    </context:component-scan>
+    <!-- 处理静态资源  -->
+    <mvc:default-servlet-handler/>
+    <bean
+            class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <ref bean="jsonHttpMessageConverter" />
+            </list>
+        </property>
+    </bean>
+    <!--避免IE执行AJAX时，返回JSON出现下载文件 -->
+    <bean id="jsonHttpMessageConverter"
+          class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>application/json;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+    <!-- 视图配置 -->
+    <bean
+            class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.eight.MonitorInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
 </beans>

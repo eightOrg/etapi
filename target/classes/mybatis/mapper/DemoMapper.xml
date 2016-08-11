@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eight.dao.DemoMapper">
+    <resultMap id="BaseResultMap" type="com.eight.pojo.Demo" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="state" property="state" jdbcType="VARCHAR" />
+        <result column="createtime" property="createTime" jdbcType="BIGINT" />
+        <result column="changetime" property="changeTime" jdbcType="BIGINT" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, state, createtime, changetime
+    </sql>
+    <select id="demoMethod" resultMap="BaseResultMap" parameterType="com.eight.pojo.Demo">
+        select
+        <include refid="Base_Column_List" />
+        from et_demo
+        <trim prefix="where" prefixOverrides="and|or" >
+            <if test="id != null and id != ''" >
+                and id = #{id,jdbcType=INTEGER}
+            </if>
+            <if test="state != null and state != ''" >
+                and state = #{state,jdbcType=VARCHAR}
+            </if>
+            <if test="changeTime != null and changeTime != ''" >
+                and changetime = #{changeTime,jdbcType=BIGINT}
+            </if>
+            <if test="createTime != null and createTime != ''" >
+                and createtime = #{createTime,jdbcType=BIGINT}
+            </if>
+        </trim>
+        order by createtime desc
+    </select>
+</mapper>

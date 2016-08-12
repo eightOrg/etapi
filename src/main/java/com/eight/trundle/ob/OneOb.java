@@ -18,7 +18,8 @@ public class OneOb<T> extends BaseOb {
         return ob;
     }
 
-    public void setOb(T ob) {
+    public OneOb<T> setOb(T ob) {
         this.ob = ob;
+        return this;
     }
 }

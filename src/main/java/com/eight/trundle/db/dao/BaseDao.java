@@ -7,10 +7,11 @@ package com.eight.trundle.db.dao;
 
 import com.eight.trundle.db.pojo.Identifiable;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
+import com.github.miemiedev.mybatis.paginator.domain.PageList;
 
 import java.util.List;
 
-public interface BaseMapper<T extends Identifiable> {
+public interface BaseDao<T extends Identifiable> {
     /**
      * 添加对象。
      * @param obj 要实例化的实体，不能为null
@@ -21,7 +22,7 @@ public interface BaseMapper<T extends Identifiable> {
     /**
      * 删除对象。
      * 查询条件
-     * @param entity 要删除的实体对象，不能为null
+     * @param obj 要删除的实体对象，不能为null
      * @return int 受影响结果数
      */
     public int delete(T obj);
@@ -43,7 +44,7 @@ public interface BaseMapper<T extends Identifiable> {
     /**
      * 更新对象。
      * 对象必须设置ID
-     * @param entity 实体的Id不能为null
+     * @param obj 实体的Id不能为null
      * @return int 受影响结果数
      */
     public int update(T obj);
@@ -67,20 +68,29 @@ public interface BaseMapper<T extends Identifiable> {
      * @param id 主键，不能为null
      * @return  结果对象，如果未找到返回null
      */
-    public <V extends T> V selectById(int id);
+    public T selectById(int id);
 
     /**
      * 查询对象列表
-     * @param query 查询参数
+     * @param obj 查询参数
      * @return 结果对象列表
      */
-    public <V extends T> List<V> selectList(T obj);
+    public List<T> selectList(T obj);
+
+    /**
+     * 查询前多少条数据
+     * @param count 查询数量
+     * @param obj 查询参数
+     * @return
+     */
+    public List<T> selectTopList(int count, T obj);
 
     /**
      * 分页查询
-     * @param page 分页对象
+     * @param obj 分页对象
+     * @param pb 分页信息
      * @return 结果对象列表
      */
-    public <V extends T> List<V> selectPageList(T obj, PageBounds pb);
+    public <V extends T> PageList<T> selectPageList(T obj, PageBounds pb);
 
 }

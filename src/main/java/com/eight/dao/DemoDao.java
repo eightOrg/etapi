@@ -5,13 +5,13 @@ package com.eight.dao;
  */
 
 import com.eight.pojo.Demo;
-import com.eight.trundle.db.dao.BaseMapper;
+import com.eight.trundle.db.dao.BaseDao;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public interface DemoMapper extends BaseMapper<Demo>{
+public interface DemoDao extends BaseDao<Demo>{
     List<Demo> demoMethod(Demo demo, PageBounds pb);
 }

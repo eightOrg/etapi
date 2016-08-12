@@ -8,9 +8,14 @@ import java.util.TreeMap;
  */
 public class Constants {
 	//常量
-	public static final int PORT = 8000;
-	public static final String ROUTE_REFLECTIONS = "com.eight.controller";
-	public static final String CONSTANTROOT = "root";
+	public static final int PORT = 8000; //监听端口
+	public static final String ROUTE_REFLECTIONS = "com.eight.controller"; //扫描位置注册vertx的服务
+	public static final String RESULT_OB_FLAG = "flag"; //flag
+	public static final String RESULT_OB_MSG = "msg"; //msg
+	public static final String RESULT_OB_CODE = "code"; //code
+	public static final String RESULT_OB_OB = "ob"; //ob
+	//服务常量
+	public static final String SERVICE_DEMO = "/demo"; //demo服务
 	//状态
 	public static final TreeMap<String, String> STATEMAP = new TreeMap<String, String>();
 	public static final String STATE_OK = "0";//正常
@@ -21,29 +26,6 @@ public class Constants {
 	public static final int CODE_OK = 200;//正常
 	public static final int CODE_LOSE = 403;//验证失败
 	public static final int CODE_FAILD = 500;//请求失败
-	//session里保存用户对象
-	public static final String SESSION_USER = "SESSION_USER";
-	//session里保存用户的资源
-	public static final String SESSION_USER_RESOURSE = "SESSION_USER_RESOURSE";
-	//session里保存用户的角色
-	public static final String SESSION_USER_ROLE = "SESSION_USER_ROLE";
-	//cookie里保存的用户对象ID
-	public static String COOKUSERID = "COOKUSERID";
-	//session保存验证码ID
-	public static final String VALIDATE_CODE_ID = "VALIDATE_CODE_ID";
-	//url返回值代码参数
-	public static final String URL_RETURN_KEY = "urk";
-	//url返回值代码参数集合
-	public static final String URL_RETURN_PAM = "pam";
-	//request中返回值key
-	public static final String RETURN_KEY = "rkey";
-	//选择时是与否
-	public static final String CONSTNATS_YES = "1";//是
-	public static final String CONSTNATS_NO = "0";//否
-	//上传图片存放地址和访问地址
-	public static final String IMAGEUPLOADPATH = "IMAGEUPLOADPATH";//存放地址 
-	public static final String IMAGEUPLOADURL = "IMAGEUPLOADURL";//访问地址
-	
 	static{
 		//状态
 		STATEMAP.put(STATE_OK, "正常");

@@ -24,24 +24,27 @@ public class BaseOb {
         return flag;
     }
 
-    public void setFlag(boolean flag) {
+    public BaseOb setFlag(boolean flag) {
         this.flag = flag;
+        return this;
     }
 
     public int getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public BaseOb setCode(int code) {
         this.code = code;
+        return this;
     }
 
     public String getMsg() {
         return msg;
     }
 
-    public void setMsg(String msg) {
+    public BaseOb setMsg(String msg) {
         this.msg = msg;
+        return this;
     }
 
     /**

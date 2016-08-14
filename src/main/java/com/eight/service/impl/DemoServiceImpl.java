@@ -1,12 +1,12 @@
 package com.eight.service.impl;
 
+import com.eight.dao.DemoDao;
 import com.eight.pojo.Demo;
-import com.eight.trundle.db.pojo.Identifiable;
+import com.eight.trundle.db.dao.BaseDao;
+import com.eight.trundle.db.service.impl.BaseServiceImpl;
 import com.eight.trundle.ob.BaseOb;
 import com.eight.trundle.ob.ListOb;
-import com.eight.dao.DemoMapper;
 import com.eight.service.DemoService;
-import com.eight.trundle.ob.OneOb;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import io.vertx.core.json.Json;
@@ -17,17 +17,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 /**
  * Created by miaoch on 2016/8/9.
  */
 @Service("DemoService")
-public class DemoServiceImpl implements DemoService {
+public class DemoServiceImpl extends BaseServiceImpl<Demo> implements DemoService {
     Logger logger = LoggerFactory.getLogger(DemoServiceImpl.class);
 
     @Autowired
-    private DemoMapper demoMapper;
+    private DemoDao demoDao;
+
+    @Override
+    protected BaseDao<Demo> getBaseDao() {
+        return (BaseDao<Demo>) demoDao;
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -36,7 +40,7 @@ public class DemoServiceImpl implements DemoService {
         Demo demo = new Demo();
         //------params - parse - demo
         PageBounds pb = new PageBounds(1,10);
-        PageList<Demo> result=(PageList<Demo>)demoMapper.demoMethod(demo, pb);
+        PageList<Demo> result=(PageList<Demo>)demoDao.demoMethod(demo, pb);
         ob.setListob(result);
         ob.setPage(result.getPaginator());
         return new JsonObject(Json.encode(ob));
@@ -60,4 +64,5 @@ public class DemoServiceImpl implements DemoService {
                ?new JsonObject(Json.encode(new BaseOb()))
                :new JsonObject(Json.encode(BaseOb.getFaildOb()));
     }
+
 }

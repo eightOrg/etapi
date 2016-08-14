@@ -103,11 +103,11 @@ public class HttpServerVerticle extends AbstractVerticle {
         router.route().handler(CookieHandler.create());
 
         //此处填写不需要验证和手动注册的接口
-        router.get("/login").handler(demo::login);
+        /*router.get("/login").handler(demo::login);
         router.get("/blockingMethod").handler(demo::blockingMethod);
         //拦截/demo下的请求
-        router.get("/demo/*").blockingHandler(demo::blockingMethod);
-        router.post("/demo/*").blockingHandler(demo::blockingMethod);
+        router.get("/demo*//*").blockingHandler(demo::blockingMethod);
+        router.post("/demo*//*").blockingHandler(demo::blockingMethod);*/
         registerHandlers();
         return router;
     }

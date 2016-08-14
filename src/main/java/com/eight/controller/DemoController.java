@@ -20,16 +20,15 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by miaoch on 2016/8/9.
  */
-@RouteHandler("/demo")
+@RouteHandler(Constants.SERVICE_DEMO)
 public class DemoController {
     private Logger logger = LoggerFactory.getLogger(DemoController.class);
     private String demoAddress = EventBusAddress.EBDemo;
 
-    @LogMsg("test")
     @RouteMapping(method = RouteMethod.GET)
     public Handler<RoutingContext> demoMethod(){
         String method = "demoMethod";
-        return HandleTemplet.getHandle(method, demoAddress, logger);
+        return HandleTemplet.getHandler(method, demoAddress, logger);
     }
 
     //@RouteMapping(method = RouteMethod.GET)

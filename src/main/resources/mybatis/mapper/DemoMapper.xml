@@ -10,7 +10,7 @@
     <sql id="Base_Column_List">
         id, state, createtime, changetime
     </sql>
-    <select id="demoMethod" resultMap="BaseResultMap" parameterType="com.eight.pojo.Demo">
+    <select id="selectPageList" resultMap="BaseResultMap" parameterType="Map">
         select
         <include refid="Base_Column_List" />
         from et_demo
@@ -28,6 +28,8 @@
                 and createtime = #{createTime,jdbcType=BIGINT}
             </if>
         </trim>
-        order by createtime desc
+        <if test="order != null and order != '' and sort != null and sort != ''" >
+            order by #{order, jdbcType=VARCHAR} #{sort, jdbcType=VARCHAR}
+        </if>
     </select>
 </mapper>

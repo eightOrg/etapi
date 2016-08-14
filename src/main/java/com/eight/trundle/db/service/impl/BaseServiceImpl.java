@@ -21,7 +21,7 @@ import java.util.Map;
  * Created by miao on 2016/8/12.
  */
 @Service("BaseService")
-public abstract class BaseServiceImpl<T extends Identifiable> implements BaseService<T> {
+public abstract class BaseServiceImpl<T extends Identifiable> implements BaseService {
     /**
      * 获取Dao，在子类里通过注入的方式实现
      * @return

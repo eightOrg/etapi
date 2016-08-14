@@ -8,10 +8,10 @@ import java.util.TreeMap;
  * @author weijl
  */
 public class Constants {
-	//常量
+	//vertx常量
 	public static final int PORT = 8000; //监听端口
 	public static final String ROUTE_REFLECTIONS = "com.eight.controller"; //扫描位置注册vertx的服务
-    //default_value
+    //JsonObject常量
     public static final int DEFAULT_LIMIT = 10; //DEFAULT_LIMIT
     public static final int DEFAULT_PAGE = 1; //DEFAULT_PAGE
     //ob

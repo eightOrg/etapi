@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by miaoch on 2016/8/12.
  */
-public interface BaseService<T extends Identifiable> {
+public interface BaseService {
 
     /**
      * 添加对象。

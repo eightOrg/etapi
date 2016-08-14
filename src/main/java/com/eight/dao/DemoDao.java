@@ -13,5 +13,4 @@ import java.util.List;
 
 @Component
 public interface DemoDao extends BaseDao<Demo>{
-    List<Demo> demoMethod(Demo demo, PageBounds pb);
 }

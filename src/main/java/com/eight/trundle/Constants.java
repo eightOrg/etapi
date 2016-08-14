@@ -8,6 +8,7 @@ import java.util.TreeMap;
  * @author weijl
  */
 public class Constants {
+    //test
 	//常量
 	public static final int PORT = 8000; //监听端口
 	public static final String ROUTE_REFLECTIONS = "com.eight.controller"; //扫描位置注册vertx的服务

@@ -8,8 +8,10 @@ package com.eight.trundle.db.dao;
 import com.eight.trundle.db.pojo.Identifiable;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
+import io.vertx.core.json.JsonObject;
 
 import java.util.List;
+import java.util.Map;
 
 public interface BaseDao<T extends Identifiable> {
     /**
@@ -17,7 +19,7 @@ public interface BaseDao<T extends Identifiable> {
      * @param obj 要实例化的实体，不能为null
      * @return 受影响的结果数
      */
-    public int insert(T obj);
+    public int insert(Map obj);
 
     /**
      * 删除对象。
@@ -25,7 +27,7 @@ public interface BaseDao<T extends Identifiable> {
      * @param obj 要删除的实体对象，不能为null
      * @return int 受影响结果数
      */
-    public int delete(T obj);
+    public int delete(Map obj);
 
     /**
      * 根据ID删除对象。
@@ -47,21 +49,21 @@ public interface BaseDao<T extends Identifiable> {
      * @param obj 实体的Id不能为null
      * @return int 受影响结果数
      */
-    public int update(T obj);
+    public int update(Map obj);
 
     /**
      * 查询记录数
      * @param query 查询对象，如果为null，则查询对象总数
      * @return long 记录总数
      */
-    public Long selectCount(T query);
+    public Long selectCount(Map query);
 
     /**
      * 查询记录数（除了本身ID之外的）
      * @param query 查询对象，如果为null，则查询对象总数
      * @return long 记录总数
      */
-    public Long selectCountExtId(T query);
+    public Long selectCountExtId(Map query);
 
     /**
      * 通过Id查询一个对象，如果id为null这会抛出IllegalArgumentException异常
@@ -75,15 +77,14 @@ public interface BaseDao<T extends Identifiable> {
      * @param obj 查询参数
      * @return 结果对象列表
      */
-    public List<T> selectList(T obj);
+    public List<T> selectList(Map obj);
 
     /**
-     * 查询前多少条数据
-     * @param count 查询数量
+     * 查询前多少条数据 obj.get("limit")
      * @param obj 查询参数
      * @return
      */
-    public List<T> selectTopList(int count, T obj);
+    public List<T> selectTopList(Map obj);
 
     /**
      * 分页查询
@@ -91,6 +92,6 @@ public interface BaseDao<T extends Identifiable> {
      * @param pb 分页信息
      * @return 结果对象列表
      */
-    public <V extends T> PageList<T> selectPageList(T obj, PageBounds pb);
+    public <V extends T> PageList<T> selectPageList(Map obj, PageBounds pb);
 
 }

@@ -1,16 +1,12 @@
 package com.eight.verticle;
 
-import com.eight.pojo.Demo;
 import com.eight.service.DemoService;
-import com.eight.trundle.Constants;
-import com.eight.trundle.db.pojo.Identifiable;
+import com.eight.service.impl.DemoServiceImpl;
 import com.eight.trundle.handle.HandleTemplet;
-import com.eight.trundle.ob.BaseOb;
 import com.eight.trundle.vertx.EventBusAddress;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.Message;
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

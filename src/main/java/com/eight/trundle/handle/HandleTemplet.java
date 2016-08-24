@@ -2,6 +2,7 @@ package com.eight.trundle.handle;
 
 import com.eight.service.DemoService;
 import com.eight.trundle.db.service.BaseService;
+import com.eight.trundle.db.sqlExcute.DBHelper;
 import com.eight.trundle.ob.BaseOb;
 import com.eight.trundle.params.ParamUtil;
 import io.vertx.core.Handler;
@@ -35,11 +36,11 @@ public class HandleTemplet {
                 logger.debug("result==========="+object.encode());
                 routingContext.response().end(object.encode());
 
-                long time = System.currentTimeMillis() - startTime;
-                String path = routingContext.request().path();
-                String uri = routingContext.request().absoluteURI();
-                String rMethod = routingContext.request().method().toString();
-                //
+                //对结果进行记录
+                DBHelper.recRequestTime(System.currentTimeMillis() - startTime,
+                        routingContext.request().path(),
+                        ob.toString(),
+                        routingContext.request().method().toString());
             });
         };
     }
@@ -54,8 +55,6 @@ public class HandleTemplet {
         return msg -> {
             String method = msg.headers().get("method");
             JsonObject ob = msg.body();
-            //JsonObject->Identifiable
-            //然后传入Identifiable
             try {
                 JsonObject json = (JsonObject) service.getClass().getMethod(method, JsonObject.class).invoke(service, ob);
                 msg.reply(json);

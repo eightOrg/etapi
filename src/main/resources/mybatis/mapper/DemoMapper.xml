@@ -10,22 +10,36 @@
     <sql id="Base_Column_List">
         id, state, createtime, changetime
     </sql>
+    <sql id="Table_Name">
+        et_demo
+    </sql>
+
+
+    <select id="selectById" resultMap="BaseResultMap" parameterType="Map">
+        select
+            <include refid="Base_Column_List" />
+        from
+            <include refid="Table_Name" />
+        where
+            id = #{id, jdbcType=INTEGER}
+    </select>
     <select id="selectPageList" resultMap="BaseResultMap" parameterType="Map">
         select
-        <include refid="Base_Column_List" />
-        from et_demo
+            <include refid="Base_Column_List" />
+        from
+            <include refid="Table_Name" />
         <trim prefix="where" prefixOverrides="and|or" >
             <if test="id != null and id != ''" >
-                and id = #{id,jdbcType=INTEGER}
+                and id = #{id, jdbcType=INTEGER}
             </if>
             <if test="state != null and state != ''" >
-                and state = #{state,jdbcType=VARCHAR}
+                and state = #{state, jdbcType=VARCHAR}
             </if>
             <if test="changeTime != null and changeTime != ''" >
-                and changetime = #{changeTime,jdbcType=BIGINT}
+                and changetime = #{changeTime, jdbcType=BIGINT}
             </if>
             <if test="createTime != null and createTime != ''" >
-                and createtime = #{createTime,jdbcType=BIGINT}
+                and createtime = #{createTime, jdbcType=BIGINT}
             </if>
         </trim>
         <if test="order != null and order != '' and sort != null and sort != ''" >

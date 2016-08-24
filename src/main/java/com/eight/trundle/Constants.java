@@ -21,7 +21,7 @@ public class Constants {
 	public static final String RESULT_OB_OB = "ob"; //ob
     //params
     public static final String PARAMS_OBJLIST = "objList";//传入列表
-    public static final String PARAMS_IDLIST = "idList";//传入列表id
+    public static final String PARAMS_IDLIST = "idList";//传入id列表
     public static final String PARAMS_LIMIT = "limit";//select_limit
     public static final String PARAMS_PAGE = "page";//select_page
 	//服务常量

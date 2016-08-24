@@ -287,7 +287,7 @@ public abstract class BaseServiceImpl<T extends Identifiable> implements BaseSer
         ListOb<T> ob = new ListOb();
         ob.setListob(result);
         ob.setPage(result.getPaginator());
-        return new io.vertx.core.json.JsonObject(Json.encode(ob));
+        return new JsonObject(Json.encode(ob));
     }
 
     private JsonObject getResultBaseOb(boolean isTrue, String trueMsg, String wrongMsg) {
@@ -295,7 +295,7 @@ public abstract class BaseServiceImpl<T extends Identifiable> implements BaseSer
                 :new JsonObject(Json.encode(wrongMsg.isEmpty()?BaseOb.getFaildOb():BaseOb.getFaildOb().setMsg(wrongMsg)));
     }
     private JsonObject getResultOneOb(T result, String trueMsg, String wrongMsg) {
-        return result == null?new JsonObject(Json.encode(trueMsg.isEmpty()?new OneOb().setOb(result):new OneOb().setOb(result).setMsg(trueMsg)))
+        return result != null?new JsonObject(Json.encode(trueMsg.isEmpty()?new OneOb().setOb(result):new OneOb().setOb(result).setMsg(trueMsg)))
                 :new JsonObject(Json.encode(wrongMsg.isEmpty()?BaseOb.getFaildOb():BaseOb.getFaildOb().setMsg(wrongMsg)));
     }
 }

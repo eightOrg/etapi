@@ -17,7 +17,7 @@ public interface BaseDao<T extends Identifiable> {
     /**
      * 添加对象。
      * @param obj 要实例化的实体，不能为null
-     * @return 受影响的结果数
+     * @return 插入数据的主键id
      */
     public int insert(Map obj);
 
@@ -85,6 +85,13 @@ public interface BaseDao<T extends Identifiable> {
      * @return
      */
     public List<T> selectTopList(Map obj);
+
+    /**
+     * 查询第一条数据
+     * @param obj 查询参数
+     * @return
+     */
+    public T selectOne(Map obj);
 
     /**
      * 分页查询

@@ -41,6 +41,6 @@ public class SystemVerticle extends AbstractVerticle {
     @Override
     public void start() throws Exception {
         super.start();
-        vertx.eventBus().<JsonObject>consumer(EventBusAddress.EBDemo).handler(msgHandler());
+        vertx.eventBus().<JsonObject>consumer(EventBusAddress.EBSystem).handler(msgHandler());
     }
 }

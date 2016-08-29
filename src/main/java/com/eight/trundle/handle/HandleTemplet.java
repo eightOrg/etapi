@@ -30,7 +30,7 @@ public class HandleTemplet {
             long startTime = System.currentTimeMillis();
             DeliveryOptions options = new DeliveryOptions().addHeader("method", method);
             JsonObject ob= ParamUtil.getParamJson(routingContext.request().params());
-            logger.debug("params==========="+ob.toString());
+            logger.debug("params==========="+ob != null?ob.toString():"null");
             routingContext.vertx().eventBus().<JsonObject>send(eventBusAddress, ob, options, result -> {
                 JsonObject object = result.result().body();
                 logger.debug("result==========="+object.encode());

@@ -3,6 +3,7 @@ package com.eight;
 import com.eight.verticle.DemoVerticle;
 import com.eight.verticle.HttpServerVerticle;
 import com.eight.verticle.SystemVerticle;
+import com.eight.verticle.UserVerticle;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ public class EightRunner {
         //暂时不启用DemoVerticle
         //vertx.deployVerticle(new DemoVerticle(context), new DeploymentOptions());
         vertx.deployVerticle(new SystemVerticle(context), new DeploymentOptions());
+        vertx.deployVerticle(new UserVerticle(context), new DeploymentOptions());
         vertx.deployVerticle(new HttpServerVerticle());
     }
 }

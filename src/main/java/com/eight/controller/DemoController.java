@@ -1,7 +1,6 @@
 package com.eight.controller;
 
 import com.eight.trundle.Constants;
-import com.eight.trundle.annotations.LogMsg;
 import com.eight.trundle.db.controller.BaseController;
 import com.eight.trundle.handle.HandleTemplet;
 import com.eight.trundle.ob.BaseOb;

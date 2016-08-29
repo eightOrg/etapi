@@ -18,12 +18,6 @@ public abstract class BaseController {
     public abstract Logger getLogger();
     public abstract String getAddress();
 
-    /*@RouteMapping(method = RouteMethod.GET)
-    public Handler<RoutingContext> selectPageList(){
-        String method = "selectPageList";
-        return HandleTemplet.getHandler(method, getAddress(), getLogger());
-    }*/
-
     /**
      * 添加对象。
      */

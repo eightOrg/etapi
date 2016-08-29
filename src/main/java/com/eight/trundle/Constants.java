@@ -25,6 +25,7 @@ public class Constants {
     public static final String PARAMS_LIMIT = "limit";//select_limit
     public static final String PARAMS_PAGE = "page";//select_page
 	//服务常量
+	public static final String SERVICE_SYSTEM = "/"; //系统服务 不需要session即可调用
 	public static final String SERVICE_DEMO = "/demo"; //demo服务
 	//pojo常量
 	public static final String POJO_ID = "id";

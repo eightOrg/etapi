@@ -27,6 +27,6 @@ public class EightRunner {
         //vertx.deployVerticle(new DemoVerticle(context), new DeploymentOptions());
         vertx.deployVerticle(new SystemVerticle(context), new DeploymentOptions());
         vertx.deployVerticle(new UserVerticle(context), new DeploymentOptions());
-        vertx.deployVerticle(new HttpServerVerticle());
+        vertx.deployVerticle(new HttpServerVerticle(context));
     }
 }

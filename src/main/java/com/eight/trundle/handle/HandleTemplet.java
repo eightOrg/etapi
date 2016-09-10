@@ -30,10 +30,10 @@ public class HandleTemplet {
             long startTime = System.currentTimeMillis();
             DeliveryOptions options = new DeliveryOptions().addHeader("method", method);
             JsonObject ob= ParamUtil.getParamJson(routingContext.request().params());
-            logger.debug("params==========="+ob != null?ob.toString():"null");
+            logger.debug("params===========" + ob != null?ob.toString():"null");
             routingContext.vertx().eventBus().<JsonObject>send(eventBusAddress, ob, options, result -> {
                 JsonObject object = result.result().body();
-                logger.debug("result==========="+object.encode());
+                logger.debug("result===========" + object.encode());
                 routingContext.response().end(object.encode());
 
                 //对响应时间进行记录
@@ -61,7 +61,7 @@ public class HandleTemplet {
             } catch (Exception e) {
                 e.printStackTrace();
                 BaseOb result = BaseOb.getFaildOb();
-                logger.error("method: "+method+";错误信息: "+e.getMessage());
+                logger.error("method: " + method + ";错误信息: " + e.getMessage());
                 msg.reply(new JsonObject(Json.encode(result)));
             }
         };

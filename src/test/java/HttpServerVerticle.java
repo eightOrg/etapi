@@ -1,23 +1,30 @@
-package com.eight.verticle;
+/*
+import com.rayeye.common.annotations.RequestMapping;
+import com.rayeye.common.annotations.RouteHandler;
+import com.rayeye.common.annotations.RouteMapping;
+import com.rayeye.common.annotations.RouteMethod;
+import com.rayeye.common.utils.PropertiesUtil;
+import com.rayeye.vertx.api.iot.contrl.global.NoticeContrl;
+import com.rayeye.vertx.api.iot.contrl.global.SystemController;
+import com.rayeye.vertx.api.iot.contrl.outweb.FireInfoContrl;
+import com.rayeye.vertx.api.iot.contrl.global.AuthenticationContrl;
 
-
-import com.eight.controller.SystemController;
-import com.eight.trundle.Constants;
-import com.eight.trundle.annotations.RouteHandler;
-import com.eight.trundle.annotations.RouteMapping;
-import com.eight.trundle.annotations.RouteMethod;
-import com.eight.trundle.session.SessionHandlerImplPc;
+import com.rayeye.vertx.api.iot.utils.SessionHandlerImplApp;
+import com.rayeye.vertx.api.iot.utils.SessionHandlerImplPc;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
+import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.json.Json;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.*;
 import io.vertx.ext.web.sstore.LocalSessionStore;
 import io.vertx.ext.web.sstore.SessionStore;
+
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,30 +36,31 @@ import java.util.Set;
 
 import static io.vertx.core.http.HttpHeaders.*;
 
+
 public class HttpServerVerticle extends AbstractVerticle {
-    private static final Logger logger = LoggerFactory.getLogger(HttpServerVerticle.class);
-    private static final Reflections reflections = new Reflections(Constants.ROUTE_REFLECTIONS);
-    private SystemController authApi;
+    private static final Logger log = LoggerFactory.getLogger(HttpServerVerticle.class);
+    private static final Reflections reflections = new Reflections("com.rayeye.vertx.api.iot.contrl");
 
     protected Router router;
     HttpServer server;
-    public HttpServerVerticle(final ApplicationContext context) {
-        authApi = (SystemController) context.getBean(SystemController.class);
-    }
+    private HttpRouter httpRouter;
 
+    public HttpServerVerticle(final ApplicationContext context) {
+        httpRouter=new HttpRouter(context);
+    }
 
     @Override
     public void start(Future<Void> future) throws Exception {
-
-        logger.info("==============web start==============");
+        log.info("==============web start==============");
         super.start();
+        server = vertx.createHttpServer();
         server = vertx.createHttpServer(createOptions());
         server.requestHandler(createRouter()::accept);
-        server.listen(result -> {
-            if (result.succeeded()) {
+        server.listen(result2 -> {
+            if (result2.succeeded()) {
                 future.complete();
             } else {
-                future.fail(result.cause());
+                future.fail(result2.cause());
             }
         });
     }
@@ -72,23 +80,28 @@ public class HttpServerVerticle extends AbstractVerticle {
         });
     }
 
+
     private HttpServerOptions createOptions() {
         HttpServerOptions options = new HttpServerOptions();
-        options.setPort(Constants.PORT);
+        options.setPort(PropertiesUtil.getApiport());
         return options;
     }
 
     private Router createRouter() {
-        logger.info("-------createRouter--------");
+        log.info("-------createRouter--------");
 
         router = Router.router(vertx);
         router.route().handler(ctx -> {
-            logger.debug("--------path:" + ctx.request().path()
-                            + "--------uri:" + ctx.request().absoluteURI()
-                            + "-------method:" + ctx.request().method()
-            );
+            log.debug("Receives the request info;===>path:{}, uri:{}, method:{}, version:{}, Dev:{}",ctx.request().path(),ctx.request().absoluteURI(),ctx.request().method(), ctx.request().headers().get("version"),ctx.request().headers().get("Dev"));
+            String origin = ctx.request().headers().get("Origin");
+            String token = ctx.request().headers().get("session");
+
+            log.debug("sesion=====" + token);
+            log.debug("origin=====" + origin);
+
             ctx.request().headers().add(CONTENT_TYPE, "charset=utf-8");
             ctx.response().headers().add(CONTENT_TYPE, "application/json; charset=utf-8");
+            //  context.response().headers().add(ACCESS_CONTROL_ALLOW_ORIGIN, origin);
             ctx.response().headers().add(ACCESS_CONTROL_ALLOW_ORIGIN, "*");
             ctx.response().headers().add(ACCESS_CONTROL_ALLOW_METHODS, "POST, GET, OPTIONS, PUT, DELETE, HEAD");
             ctx.response().headers().add(ACCESS_CONTROL_ALLOW_HEADERS, "X-PINGOTHER, Origin,Content-Type, Accept, X-Requested-With, session,Dev,Version");
@@ -96,7 +109,7 @@ public class HttpServerVerticle extends AbstractVerticle {
             ctx.next();
         });
 
-        /*允许跨域请求*/
+
         Set<HttpMethod> method = new HashSet<HttpMethod>();
         method.add(HttpMethod.GET);
         method.add(HttpMethod.POST);
@@ -104,36 +117,48 @@ public class HttpServerVerticle extends AbstractVerticle {
         method.add(HttpMethod.PUT);
         method.add(HttpMethod.DELETE);
         method.add(HttpMethod.HEAD);
+
         router.route().handler(CorsHandler.create("*").allowedMethods(method));
+       // router.route().handler(BodyHandler.create());
         router.route().handler(CookieHandler.create());
+
+        SessionStore sessionStoreApp = LocalSessionStore.create(vertx, "vertx-web.sessions-app",15552000000l);
         SessionStore sessionStorePc = LocalSessionStore.create(vertx, "vertx-web.sessions-pc");
+        //SessionStore sessionStoreVer = LocalSessionStore.create(vertx, "sessions-verifyCode");
+
+        SessionHandler sessionHandlerApp = SessionHandlerImplApp.createApp(sessionStoreApp, "vertx-web.sessions-app");
         SessionHandler sessionHandlerPc = SessionHandlerImplPc.createPc(sessionStorePc, "vertx-web.sessions-pc");
+        //SessionHandler sessionHandlerVer = SessionHandlerImplPc.createPc(sessionStoreVer, "sessions-verifyCode");
+
+        sessionHandlerPc.setSessionTimeout(30*60*1000);
+        //sessionHandlerVer.setSessionTimeout(5*60*1000);
+        sessionHandlerApp.setNagHttps(false);
+        router.route().handler(sessionHandlerApp);
         router.route().handler(sessionHandlerPc);
+        //router.route().handler(sessionHandlerVer);
+
+
+
         router.route().handler(BodyHandler.create());
-        //此处填写不需要验证和手动注册的接口
-        router.post("/login").handler(authApi::login);
-        //拦截/user下的请求
-        router.get("/user/*").blockingHandler(authApi::auth);
-        router.post("/user/*").blockingHandler(authApi::auth);
+
         try {
-            //httpRouter.registerRoute(router);
+            httpRouter.registerRoute(router);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("Manually Register Handler Fail，Error details："+e.getMessage());
+            log.error("Manually Register Handler Fail，Error details："+e.getMessage());
         }
         registerHandlers();
         return router;
     }
 
     private void registerHandlers() {
-        logger.debug("Register available request handlers...");
-
+        log.debug("Register available request handlers...");
         Set<Class<?>> handlers = reflections.getTypesAnnotatedWith(RouteHandler.class);
         for (Class<?> handler : handlers) {
             try {
                 registerNewHandler(handler);
             } catch (Exception e) {
-                logger.error("Error register {}", handler);
+                log.error("Error register {}", handler);
             }
         }
     }
@@ -146,13 +171,23 @@ public class HttpServerVerticle extends AbstractVerticle {
         }
         Object instance = handler.newInstance();
         Method[] methods = handler.getMethods();
+
         for (Method method : methods) {
             if (method.isAnnotationPresent(RouteMapping.class)) {
                 RouteMapping mapping = method.getAnnotation(RouteMapping.class);
                 RouteMethod routeMethod = mapping.method();
-                String url = root + "/" + method.getName() + mapping.value();
+                String routeUrl="";
+                if(mapping.value().startsWith("/:")){
+                    routeUrl=(method.getName()+mapping.value());
+                }else{
+                    routeUrl=(mapping.value().endsWith(method.getName())?mapping.value():(mapping.isCover()?mapping.value():mapping.value()+method.getName()));
+                    if(routeUrl.startsWith("/")){
+                        routeUrl=routeUrl.substring(1);
+                    }
+                }
+                String url = root + "/" +routeUrl;
                 Handler<RoutingContext> methodHandler = (Handler<RoutingContext>) method.invoke(instance);
-                logger.debug("Register New Handler -> {}:{}", routeMethod, url);
+                log.debug("Register New Handler -> {}:{}", routeMethod, url);
                 switch (routeMethod) {
                     case POST:
                         router.post(url).handler(methodHandler);
@@ -163,7 +198,7 @@ public class HttpServerVerticle extends AbstractVerticle {
                     case DELETE:
                         router.delete(url).handler(methodHandler);
                         break;
-                    case GET:
+                    case GET: // fall through
                     default:
                         router.get(url).handler(methodHandler);
                         break;
@@ -171,4 +206,16 @@ public class HttpServerVerticle extends AbstractVerticle {
             }
         }
     }
+
+
+    private void redirectTo(RoutingContext context, String url) {
+        HttpServerResponse response = context.response();
+        response.setStatusCode(303);
+       // response.headers().set(ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+        response.headers().add("Location", url);
+        response.end();
+    }
+
+
 }
+*/

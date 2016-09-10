@@ -99,11 +99,6 @@ public class SessionHandlerImplPc implements SessionHandler {
         }
     }
 
-
-
-
-
-
     private void addStoreSessionHandler(RoutingContext context) {
         context.addHeadersEndHandler(v -> {
             Session session = context.session();

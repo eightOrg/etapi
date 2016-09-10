@@ -107,8 +107,13 @@ public class HttpServerVerticle extends AbstractVerticle {
         router.route().handler(CorsHandler.create("*").allowedMethods(method));
         router.route().handler(CookieHandler.create());
         SessionStore sessionStorePc = LocalSessionStore.create(vertx, "vertx-web.sessions-pc");
+        SessionStore sessionStoreApp = LocalSessionStore.create(vertx, "vertx-web.sessions-app", 15552000000l);
         SessionHandler sessionHandlerPc = SessionHandlerImplPc.createPc(sessionStorePc, "vertx-web.sessions-pc");
+        SessionHandler sessionHandlerApp = SessionHandlerImplPc.createPc(sessionStorePc, "vertx-web.sessions-app");
+        sessionHandlerPc.setSessionTimeout(30*60*1000);
+        sessionHandlerApp.setNagHttps(false);
         router.route().handler(sessionHandlerPc);
+        router.route().handler(sessionHandlerApp);
         router.route().handler(BodyHandler.create());
         //此处填写不需要验证和手动注册的接口
         router.post("/login").handler(authApi::login);

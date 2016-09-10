@@ -72,7 +72,6 @@ public class SessionHandlerImplApp implements SessionHandler {
             }
         }
 
-
         String sessionID = context.request().headers().get("session");
         String dev = context.request().headers().get("Dev");
 
@@ -81,24 +80,17 @@ public class SessionHandlerImplApp implements SessionHandler {
             return;
         }
         if (sessionID != null) {
-
             sessionStore.get(sessionID, res -> {
                 if (res.succeeded()) {
                     Session session = res.result();
-
                     if (session != null) {
                         context.setSession(session);
                         session.setAccessed();
                         addStoreSessionHandler(context);
                     } else {
-                        // Cannot find session - either it timed out, or was explicitly destroyed at the server side on a
-                        // previous request.
-                        // Either way, we create a new one.
-
                         createNewSession(context);
                     }
                 } else {
-
                     context.fail(res.cause());
                 }
                 context.next();
@@ -129,7 +121,6 @@ public class SessionHandlerImplApp implements SessionHandler {
             }
         });
     }
-
 
     private void createNewSession(RoutingContext context) {
         Session session = sessionStore.createSession(sessionTimeout);

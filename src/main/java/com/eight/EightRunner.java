@@ -1,6 +1,5 @@
 package com.eight;
 
-import com.eight.verticle.DemoVerticle;
 import com.eight.verticle.HttpServerVerticle;
 import com.eight.verticle.SystemVerticle;
 import com.eight.verticle.UserVerticle;

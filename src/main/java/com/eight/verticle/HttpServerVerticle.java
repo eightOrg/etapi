@@ -118,8 +118,8 @@ public class HttpServerVerticle extends AbstractVerticle {
         //此处填写不需要验证和手动注册的接口
         router.post("/login").handler(authApi::login);
         //拦截/user下的请求
-        router.get("/user/*").blockingHandler(authApi::auth);
-        router.post("/user/*").blockingHandler(authApi::auth);
+        //router.get("/user/*").blockingHandler(authApi::auth);
+        //router.post("/user/*").blockingHandler(authApi::auth);
         try {
             //httpRouter.registerRoute(router);
         } catch (Exception e) {

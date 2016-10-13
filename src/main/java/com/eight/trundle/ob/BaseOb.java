@@ -2,6 +2,9 @@ package com.eight.trundle.ob;
 
 import com.eight.trundle.Constants;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by miaoch on 2016/4/5.
  */
@@ -10,6 +13,7 @@ public class BaseOb {
     private boolean flag = true;  //true=正确  false=失败
     private int code = Constants.CODE_OK;
     private String msg = Constants.CODEMAP.get(Constants.CODE_OK);
+    private Map extVal = new HashMap();
 
     public BaseOb(boolean flag, int code, String msg) {
         this.flag = flag;
@@ -45,6 +49,15 @@ public class BaseOb {
     public BaseOb setMsg(String msg) {
         this.msg = msg;
         return this;
+    }
+
+
+    public Map getExtVal() {
+        return extVal;
+    }
+
+    public void setExtVal(Map extVal) {
+        this.extVal = extVal;
     }
 
     /**

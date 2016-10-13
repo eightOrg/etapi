@@ -1,13 +1,14 @@
 package com.eight.service.impl;
 
-import com.eight.dao.DemoDao;
 import com.eight.dao.UserDao;
-import com.eight.pojo.Demo;
 import com.eight.pojo.User;
-import com.eight.service.DemoService;
 import com.eight.service.UserService;
+import com.eight.trundle.crypt.MD5;
 import com.eight.trundle.db.dao.BaseDao;
 import com.eight.trundle.db.service.impl.BaseServiceImpl;
+import com.eight.trundle.ob.BaseOb;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,4 +30,14 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         return (BaseDao<User>) userDao;
     }
 
+    @Override
+    public JsonObject insert(JsonObject params) {
+        if (!params.containsKey("password")) {
+            return new JsonObject(Json.encode(BaseOb.getFaildOb().setMsg("必须输入密码")));
+        }
+        String password = params.getValue("password").toString();
+        password = MD5.MD5(password);
+        params.put("password", password);
+        return super.insert(params);
+    }
 }

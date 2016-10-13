@@ -59,14 +59,7 @@ public interface BaseDao<T extends Identifiable> {
     public Long selectCount(Map query);
 
     /**
-     * 查询记录数（除了本身ID之外的）
-     * @param query 查询对象，如果为null，则查询对象总数
-     * @return long 记录总数
-     */
-    public Long selectCountExtId(Map query);
-
-    /**
-     * 通过Id查询一个对象，如果id为null这会抛出IllegalArgumentException异常
+     * 通过Id查询一个对象
      * @param id 主键，不能为null
      * @return  结果对象，如果未找到返回null
      */
@@ -89,7 +82,7 @@ public interface BaseDao<T extends Identifiable> {
     /**
      * 查询第一条数据
      * @param obj 查询参数
-     * @return
+     * @return 结果对象
      */
     public T selectOne(Map obj);
 
@@ -99,6 +92,6 @@ public interface BaseDao<T extends Identifiable> {
      * @param pb 分页信息
      * @return 结果对象列表
      */
-    public <V extends T> PageList<T> selectPageList(Map obj, PageBounds pb);
+    public PageList<T> selectPageList(Map obj, PageBounds pb);
 
 }

@@ -1,28 +1,18 @@
 package com.eight.controller;
 
-import com.eight.pojo.User;
 import com.eight.trundle.Constants;
-import com.eight.trundle.annotations.RouteHandler;
-import com.eight.trundle.annotations.RouteMapping;
-import com.eight.trundle.annotations.RouteMethod;
-import com.eight.trundle.db.sqlExcute.DBHelper;
-import com.eight.trundle.handle.HandleTemplet;
-import com.eight.trundle.ob.OneOb;
+import com.eight.trundle.ob.BaseOb;
 import com.eight.trundle.params.ParamUtil;
 import com.eight.trundle.vertx.EventBusAddress;
-import io.vertx.core.Handler;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.json.Json;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.shareddata.LocalMap;
-import io.vertx.ext.web.Cookie;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.eight.trundle.Constants;
 import org.springframework.stereotype.Component;
 
 
@@ -82,7 +72,7 @@ public class SystemController {
         if (session == null || session.get("user") == null) {
             logger.debug("登陆失效！");
             routingContext.response().setStatusCode(Constants.CODE_OK);
-            OneOb ob = new OneOb();
+            BaseOb ob = new BaseOb();
             ob.setCode(Constants.CODE_LOSE);
             ob.setMsg("session过期或在其他手机上登录过！");
             routingContext.response().end(Json.encode(ob));

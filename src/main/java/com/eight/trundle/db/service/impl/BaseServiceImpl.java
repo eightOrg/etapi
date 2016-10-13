@@ -39,13 +39,13 @@ public abstract class BaseServiceImpl<T extends Identifiable> implements BaseSer
         if (obj == null) {
             return new JsonObject(Json.encode(BaseOb.getFaildOb().setMsg("插入元素不能为空!")));
         }
-        if (MapUtil.isNotEmpty(obj, Constants.POJO_STATE)) {
+        if (!MapUtil.isNotEmpty(obj, Constants.POJO_STATE)) {
             obj.put(Constants.POJO_STATE, Constants.STATE_OK);
         }
-        if (obj.containsKey(Constants.POJO_CREATETIME)) {
+        if (!obj.containsKey(Constants.POJO_CREATETIME)) {
             obj.put(Constants.POJO_CREATETIME, System.currentTimeMillis());
         }
-        if (obj.containsKey(Constants.POJO_CHANGETIME)) {
+        if (!obj.containsKey(Constants.POJO_CHANGETIME)) {
             obj.put(Constants.POJO_CHANGETIME, System.currentTimeMillis());
         }
         int count = getBaseDao().insert(obj);
@@ -187,20 +187,11 @@ public abstract class BaseServiceImpl<T extends Identifiable> implements BaseSer
      */
     @Override
     public JsonObject selectCount(JsonObject query) {
-
         long count = getBaseDao().selectCount(query.getMap());
-        return new JsonObject(Json.encode(new BaseOb().setMsg("查询结果包含" + count + "个元素")));
-    }
-
-    /**
-     * 根据条件查询记录数。（除了本身ID之外的）
-     * @param query 查询对象，如果为null，则查询对象总数
-     * @return long 记录总数
-     */
-    @Override
-    public JsonObject selectCountExtId(JsonObject query) {
-        long count = getBaseDao().selectCountExtId(query.getMap());
-        return new JsonObject(Json.encode(new BaseOb().setMsg("查询结果包含" + count + "个元素")));
+        BaseOb result = new BaseOb();
+        result.getExtVal().put("count", count);
+        result.setMsg("查询成功");
+        return new JsonObject(Json.encode(result));
     }
 
     /**
@@ -228,30 +219,37 @@ public abstract class BaseServiceImpl<T extends Identifiable> implements BaseSer
     @Override
     public JsonObject selectList(JsonObject obj) {
         List<T> result = getBaseDao().selectList(obj.getMap());
-        OneOb<List<T>> obList = new OneOb<>();
-        obList.setOb(result);
+        ListOb<T> obList = new ListOb<>();
+        obList.setListob(result);
         obList.setMsg("查询成功，结果包含" + result.size() + "个元素");
         return new JsonObject(Json.encode(obList));
     }
 
     /**
-     * 根据条件查询一个对象。
+     * 根据条件查询一个对象。 包含sortMap的map
+     * sortMap {
+     *     createTime : desc
+     *     changeTime : asc
+     * }
      * 不适合从大量数据中获取一条。适合根据条件筛选的结果集比较小
      * @param obj 查询对象，不能为null
      * @return 结果对象
      */
     @Override
     public JsonObject selectOne(JsonObject obj) {
-        obj.put(Constants.PARAMS_LIMIT, 1);
-        List<T> list = (List<T>) this.selectTopList(obj).getValue(Constants.RESULT_OB_OB);
-        if(list != null && list.size() > 0){
-            return getResultOneOb(list.get(0), "查询首元素成功", "查询失败不含该元素");
-        }
-        return new JsonObject(Json.encode(BaseOb.getFaildOb().setMsg("查询失败不含该元素")));
+        T result = getBaseDao().selectOne(obj.getMap());
+        OneOb<T> ob = new OneOb<>();
+        ob.setOb(result);
+        ob.setMsg("查询成功");
+        return new JsonObject(Json.encode(ob));
     }
 
     /**
-     * 根据条件查询多个对象。
+     * 根据条件查询多个对象。包含sortMap的map
+     *  sortMap {
+     *     createTime : desc
+     *     changeTime : asc
+     * }
      *params.get("limit")
      * @param params 查询对象，不能为null
      * @return 结果对象
@@ -266,8 +264,8 @@ public abstract class BaseServiceImpl<T extends Identifiable> implements BaseSer
             return new JsonObject(Json.encode(BaseOb.getFaildOb().setMsg("查询数量不能小于1！")));
         }
         List<T> result = getBaseDao().selectTopList(params.getMap());
-        OneOb<List<T>> obList = new OneOb<>();
-        obList.setOb(result);
+        ListOb<T> obList = new ListOb();
+        obList.setListob(result);
         obList.setMsg("查询成功，结果包含" + result.size() + "个元素");
         return new JsonObject(Json.encode(obList));
     }

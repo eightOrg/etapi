@@ -1,6 +1,5 @@
 package com.eight.trundle.ob;
 
-import com.eight.trundle.db.pojo.Identifiable;
 
 /**
  * Created by miaoch on 2016/4/5.

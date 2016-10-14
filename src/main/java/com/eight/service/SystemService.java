@@ -10,5 +10,6 @@ import io.vertx.core.json.JsonObject;
 public interface SystemService {
     JsonObject login(JsonObject params);
     JsonObject getCode(JsonObject params);
-    JsonObject register(JsonObject params);
+    JsonObject checkCode(JsonObject params);
+    JsonObject updateOrInsertUser(JsonObject params);
 }

@@ -68,7 +68,7 @@ public class SystemServiceImpl implements SystemService {
                 }
                 UserRegister userRegister = userRegisterDao.selectById(params.getValue("mobilephone").toString());
                 if (userRegister != null){
-                    if ("1".equals(userRegister.getCode())) {
+                    if ("1".equals(userRegister.getCode()) && userDao.selectOne(params.getMap())!=null) {
                         return JsonUtil.getFaildOb("用户已经注册！");
                     } else {
                         userRegister.setCode(code);
@@ -95,37 +95,64 @@ public class SystemServiceImpl implements SystemService {
         }
     }
 
+    /**
+     * 验证码验证
+     * @param params getType 1 忘记密码 2 新用户注册
+     * @return
+     */
     @Override
-    public JsonObject register(JsonObject params) {
-        Map obj = params.getMap();
-        if (obj == null) {
-            return JsonUtil.getFaildOb("插入元素不能为空!");
-        } else if (obj.get("mobilephone") == null){
-            return JsonUtil.getFaildOb("手机号不能为空!");
+    public JsonObject checkCode(JsonObject params) {
+        if (params.containsKey("getType")) {
+            String getType = params.getValue("getType").toString();
+            if ("1".equals(getType)) { //忘记密码
+                return userDao.selectOne(params.getMap()) == null ?
+                        JsonUtil.getFaildOb():JsonUtil.getTrueOb();
+            } else if ("2".equals(getType)) { //新用户注册
+                return userRegisterDao.selectOne(params.getMap()) == null ?
+                        JsonUtil.getFaildOb():JsonUtil.getTrueOb();
+            } else {
+                return JsonUtil.getFaildOb("getType有误");
+            }
+        } else {
+            return JsonUtil.getFaildOb("验证类型不能为空");
         }
+    }
+
+    /**
+     * 更新或插入用户信息 用于注册和忘记密码
+     * @param params getType 1 忘记密码 2 新用户注册
+     * @return
+     */
+    @Override
+    public JsonObject updateOrInsertUser(JsonObject params) {
         if (!params.containsKey("password")) {
-            return JsonUtil.getFaildOb("必须输入密码");
+            return JsonUtil.getFaildOb("密码不能为空！");
         }
         String password = params.getValue("password").toString();
         password = MD5.MD5(password);
-        obj.put("password", password);
-        UserRegister userRegister = userRegisterDao.selectById(obj.get("mobilephone").toString());
-        if (userRegister != null){
-            if ("1".equals(userRegister.getCode())) {
-                return JsonUtil.getFaildOb("用户已经注册！");
-            } else {
-                int count = userRegisterDao.update(obj);
+        params.put("password", password);
+        Map obj = params.getMap();
+        User user = userDao.selectOne(obj);
+        if (params.containsKey("getType")) {
+            String getType = params.getValue("getType").toString();
+            if ("1".equals(getType)) { //更新密码
+                user.setPassword(password);
+                int count = userDao.update(user.parseMap());
                 return JsonUtil.getTrueOb(count + "个元素被更新");
+            } else if ("2".equals(getType)) { //更新或插入整个用户
+                if (user == null) {
+                    int count = userDao.insert(obj);
+                    return JsonUtil.getTrueOb(count + "个元素被插入");
+                } else {
+                    int count = userDao.update(obj);
+                    return JsonUtil.getTrueOb(count + "个元素被更新");
+                }
+            } else {
+                return JsonUtil.getFaildOb("getType有误");
             }
         } else {
-            if (!MapUtil.isNotEmpty(obj, Constants.POJO_STATE)) {
-                obj.put(Constants.POJO_STATE, Constants.STATE_OK);
-            }
-            if (!obj.containsKey(Constants.POJO_CREATETIME)) {
-                obj.put(Constants.POJO_CREATETIME, System.currentTimeMillis());
-            }
-            int count = userRegisterDao.insert(obj);
-            return JsonUtil.getTrueOb(count + "个元素被插入");
+            return JsonUtil.getFaildOb("验证类型不能为空");
         }
+
     }
 }

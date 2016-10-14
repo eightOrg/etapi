@@ -94,24 +94,12 @@ public class SystemController {
             routingContext.response().end(object.encode());
         });
     }
+
     /**
-     * 获取验证码 type:忘记密码 新用户注册
+     * 验证码验证 getType 1: 忘记密码 2: 新用户注册
      */
-    /*public void getCode(RoutingContext routingContext){
-        DeliveryOptions options = new DeliveryOptions().addHeader("method", "getCode");
-        JsonObject ob= ParamUtil.getParamJson(routingContext.request().params());
-        logger.debug("params===========" + ob !=null?ob.toString():"null");
-        routingContext.vertx().eventBus().<JsonObject>send(address, ob, options, result -> {
-            JsonObject object = result.result().body();
-            logger.debug("result===========" + object.encode());
-            routingContext.response().end(object.encode());
-        });
-    }*/
-    /**
-     * 注册成功
-     */
-    public void register(RoutingContext routingContext){
-        DeliveryOptions options = new DeliveryOptions().addHeader("method", "register");
+    public void checkCode(RoutingContext routingContext){
+        DeliveryOptions options = new DeliveryOptions().addHeader("method", "checkCode");
         JsonObject ob= ParamUtil.getParamJson(routingContext.request().params());
         logger.debug("params===========" + ob !=null?ob.toString():"null");
         routingContext.vertx().eventBus().<JsonObject>send(address, ob, options, result -> {
@@ -122,10 +110,10 @@ public class SystemController {
     }
 
     /**
-     * 注册提交验证码 并生成该用户
+     * 更新或者插入用户信息 getType 1: 更新密码 2: 插入或更新整个用户
      */
-    /*public void submit(RoutingContext routingContext){
-        DeliveryOptions options = new DeliveryOptions().addHeader("method", "register");
+    public void updateOrInsertUser(RoutingContext routingContext){
+        DeliveryOptions options = new DeliveryOptions().addHeader("method", "updateOrInsertUser");
         JsonObject ob= ParamUtil.getParamJson(routingContext.request().params());
         logger.debug("params===========" + ob !=null?ob.toString():"null");
         routingContext.vertx().eventBus().<JsonObject>send(address, ob, options, result -> {
@@ -133,5 +121,6 @@ public class SystemController {
             logger.debug("result===========" + object.encode());
             routingContext.response().end(object.encode());
         });
-    }*/
+    }
+
 }

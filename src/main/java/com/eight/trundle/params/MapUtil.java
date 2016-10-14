@@ -3,6 +3,7 @@ package com.eight.trundle.params;
 import io.vertx.core.json.JsonObject;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by miaoch on 2016/8/14.
@@ -48,4 +49,5 @@ public class MapUtil {
     public static boolean isEmpty (JsonObject obj, String key) {
         return isEmpty(obj.getMap(), key);
     }
+
 }

@@ -1,5 +1,7 @@
 package com.eight.trundle.common;
 
+import java.util.Random;
+
 /**
  * 字符串操作类
  * @author weijl
@@ -161,5 +163,13 @@ public class StringUtils {
 	    }
 	    return str;
 	  }
-	  
+
+	  public static String getCode(int len) {
+          Random random = new Random();
+		  String code = "";
+		  for (int i = 0; i <len ; i++) {
+		      code += random.nextInt(10);
+		  }
+		  return code;
+	  }
 }

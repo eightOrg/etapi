@@ -1,6 +1,5 @@
 package com.eight.trundle.ob;
 
-import com.eight.trundle.db.pojo.Identifiable;
 import com.github.miemiedev.mybatis.paginator.domain.Paginator;
 
 import java.util.List;
@@ -16,13 +15,13 @@ public class ListOb<T> extends BaseOb {
     private boolean hasNextPage; //有下一页
     private boolean hasPrePage; //有上一页
     private int nopage;  //第几页
-    private List<T> ob;
+    private List<T> listOb;
 
     public ListOb() {
     }
 
     public ListOb(List<T> ob) {
-        this.ob = ob;
+        this.listOb = ob;
     }
     public boolean isHasNextPage() {
         return hasNextPage;
@@ -41,11 +40,11 @@ public class ListOb<T> extends BaseOb {
     }
 
     public List<T> getListob() {
-        return ob;
+        return listOb;
     }
 
     public void setListob(List<T> listob) {
-        this.ob = listob;
+        this.listOb = listob;
     }
 
     public int getTotal() {

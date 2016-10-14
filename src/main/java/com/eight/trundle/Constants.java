@@ -1,5 +1,4 @@
 package com.eight.trundle;
-import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -9,7 +8,7 @@ import java.util.TreeMap;
  */
 public class Constants {
 	//vertx常量
-	public static final int PORT = 8000; //监听端口
+	public static final int PORT = 8888; //监听端口
 	public static final String ROUTE_REFLECTIONS = "com.eight.controller"; //扫描位置注册vertx的服务
     //JsonObject常量
     public static final int DEFAULT_LIMIT = 10; //DEFAULT_LIMIT
@@ -21,11 +20,11 @@ public class Constants {
 	public static final String RESULT_OB_OB = "ob"; //ob
     //params
     public static final String PARAMS_OBJLIST = "objList";//传入列表
-    public static final String PARAMS_IDLIST = "idList";//传入列表id
+    public static final String PARAMS_IDLIST = "idList";//传入id列表
     public static final String PARAMS_LIMIT = "limit";//select_limit
     public static final String PARAMS_PAGE = "page";//select_page
 	//服务常量
-	public static final String SERVICE_DEMO = "/demo"; //demo服务
+	public static final String SERVICE_USER = "/user"; //user服务
 	//pojo常量
 	public static final String POJO_ID = "id";
 	public static final String POJO_STATE = "state";

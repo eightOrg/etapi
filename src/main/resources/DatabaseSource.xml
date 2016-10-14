@@ -50,7 +50,7 @@
 
         <!-- 配置监控统计拦截的filters -->
         <property name="filters" value="stat"/>
-        <property name="url" value="jdbc:mysql://127.0.0.1/test?useUnicode=true&amp;characterEncoding=UTF-8&amp;allowMultiQueries=true"/>
+        <property name="url" value="jdbc:mysql://127.0.0.1/eightrec?useUnicode=true&amp;characterEncoding=UTF-8&amp;allowMultiQueries=true"/>
     </bean>
 
     <!-- mybatis.spring自动映射    -->
@@ -75,19 +75,7 @@
     <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" order="100" />
 
     <!-- 自动扫描，多个包以 逗号分隔  -->
-    <context:component-scan base-package="com.eight">
-        <!--
-        <context:exclude-filter type="annotations" expression="org.springframework.stereotype.Controller"/>
-        -->
-    </context:component-scan>
+    <context:component-scan base-package="com.eight" />
     <aop:aspectj-autoproxy proxy-target-class="true" />
 
-    <!-- 拦截器，用以记录日志，要求被记录日志的方法有 @LogMsg 注解 -->
-    <!--<mvc:interceptors>
-        <mvc:interceptor>
-            <mvc:mapping path="/**"/>
-            <bean class="com.eight.MonitorInterceptor"/>
-        </mvc:interceptor>
-
-    </mvc:interceptors>-->
 </beans>

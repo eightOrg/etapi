@@ -1,10 +1,6 @@
 package com.eight.trundle.db.service;
 
-import com.eight.trundle.db.pojo.Identifiable;
-import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import io.vertx.core.json.JsonObject;
-
-import java.util.List;
 
 /**
  * Created by miaoch on 2016/8/12.
@@ -79,13 +75,6 @@ public interface BaseService {
      * @return long 记录总数
      */
     public JsonObject selectCount(JsonObject query);
-
-    /**
-     * 根据条件查询记录数。（除了本身ID之外的）
-     * @param query 查询对象，如果为null，则查询对象总数
-     * @return long 记录总数
-     */
-    public JsonObject selectCountExtId(JsonObject query);
 
     /**
      * 通过Id查询一个对象。

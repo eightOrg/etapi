@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eight.dao.UserDao">
+    <resultMap id="BaseResultMap" type="com.eight.pojo.User" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="username" property="username" jdbcType="VARCHAR" />
+        <result column="password" property="password" jdbcType="VARCHAR" />
+        <result column="mobilephone" property="mobilephone" jdbcType="VARCHAR" />
+        <result column="realname" property="realname" jdbcType="VARCHAR" />
+        <result column="description" property="description" jdbcType="VARCHAR" />
+        <result column="areaid" property="areaId" jdbcType="INTEGER" />
+        <result column="level" property="level" jdbcType="INTEGER" />
+        <result column="exp" property="exp" jdbcType="INTEGER" />
+        <result column="gold" property="gold" jdbcType="INTEGER" />
+        <result column="picture" property="picture" jdbcType="VARCHAR" />
+        <result column="monincome" property="monIncome" jdbcType="DOUBLE" />
+        <result column="dayincome" property="dayIncome" jdbcType="DOUBLE" />
+        <result column="monexpense" property="monExpense" jdbcType="DOUBLE" />
+        <result column="dayexpense" property="dayExpense" jdbcType="DOUBLE" />
+        <result column="isremind" property="isRemind" jdbcType="VARCHAR" />
+        <result column="code" property="code" jdbcType="VARCHAR" />
+        <result column="state" property="state" jdbcType="VARCHAR" />
+        <result column="createtime" property="createTime" jdbcType="BIGINT" />
+        <result column="changetime" property="changeTime" jdbcType="BIGINT" />
+    </resultMap>
+
+    <sql id="Table_Name">
+        et_user
+    </sql>
+
+    <sql id="Base_Column_List">
+        id, username, password, mobilephone, realname, description, areaid, `level`, exp, gold, picture,
+         monincome, dayincome, monexpense, dayexpense, isremind, code, state, createtime, changetime
+    </sql>
+
+    <sql id="Insert_Values">
+        VALUES (#{id}, #{username}, #{password}, #{mobilephone}, #{realname}, #{description}, #{areaId},
+        #{level}, #{exp}, #{gold}, #{picture}, #{monIcome}, #{dayIncome}, #{monExpense},
+        #{dayExpense}, #{isRemind}, #{code}, #{state}, #{createTime}, #{changeTime})
+    </sql>
+
+    <sql id="Set_Values">
+        <trim prefix="set" suffixOverrides="," >
+            <if test="username != null" >
+                username = #{username, jdbcType=VARCHAR},
+            </if>
+            <if test="password != null" >
+                password = #{password, jdbcType=VARCHAR},
+            </if>
+            <if test="mobilephone != null" >
+                mobilephone = #{mobilephone, jdbcType=VARCHAR},
+            </if>
+            <if test="realname != null" >
+                realname = #{realname, jdbcType=VARCHAR},
+            </if>
+            <if test="description != null" >
+                description = #{description, jdbcType=VARCHAR},
+            </if>
+            <if test="areaId != null" >
+                areaId = #{areaId, jdbcType=INTEGER},
+            </if>
+            <if test="level != null" >
+                `level` = #{level, jdbcType=INTEGER},
+            </if>
+            <if test="exp != null" >
+                exp = #{exp, jdbcType=INTEGER},
+            </if>
+            <if test="gold != null" >
+                gold = #{gold, jdbcType=INTEGER},
+            </if>
+            <if test="picture != null" >
+                picture = #{picture, jdbcType=VARCHAR},
+            </if>
+            <if test="monIcome != null" >
+                monIcome = #{monIcome, jdbcType=DOUBLE},
+            </if>
+            <if test="dayIncome != null" >
+                dayIncome = #{dayIncome, jdbcType=DOUBLE},
+            </if>
+            <if test="monExpense != null" >
+                monExpense = #{monExpense, jdbcType=DOUBLE},
+            </if>
+            <if test="dayExpense != null" >
+                dayExpense = #{dayExpense, jdbcType=DOUBLE},
+            </if>
+            <if test="isRemind != null" >
+                isRemind = #{isRemind, jdbcType=VARCHAR},
+            </if>
+            <if test="code != null" >
+                code = #{code, jdbcType=VARCHAR},
+            </if>
+            <if test="state != null and state != ''" >
+                state = #{state, jdbcType=VARCHAR},
+            </if>
+            <if test="changeTime != null and changeTime != ''" >
+                changetime = #{changeTime, jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null and createTime != ''" >
+                createtime = #{createTime, jdbcType=BIGINT},
+            </if>
+        </trim>
+    </sql>
+
+    <sql id="WhereOfMap">
+        <trim prefix="where" prefixOverrides="and" >
+            <if test="id != null" >
+                and id = #{id, jdbcType=INTEGER}
+            </if>
+            <if test="username != null" >
+                and username = #{username, jdbcType=VARCHAR}
+            </if>
+            <if test="password != null" >
+                and password = #{password, jdbcType=VARCHAR}
+            </if>
+            <if test="mobilephone != null" >
+                and mobilephone = #{mobilephone, jdbcType=VARCHAR}
+            </if>
+            <if test="realname != null" >
+                and realname = #{realname, jdbcType=VARCHAR}
+            </if>
+            <if test="description != null" >
+                and description = #{description, jdbcType=VARCHAR}
+            </if>
+            <if test="areaId != null" >
+                and areaId = #{areaId, jdbcType=INTEGER}
+            </if>
+            <if test="level != null" >
+                and `level` = #{level, jdbcType=INTEGER}
+            </if>
+            <if test="exp != null" >
+                and exp = #{exp, jdbcType=INTEGER}
+            </if>
+            <if test="gold != null" >
+                and gold = #{gold, jdbcType=INTEGER}
+            </if>
+            <if test="picture != null" >
+                and picture = #{picture, jdbcType=VARCHAR}
+            </if>
+            <if test="monIcome != null" >
+                and monIcome = #{monIcome, jdbcType=DOUBLE}
+            </if>
+            <if test="dayIncome != null" >
+                and dayIncome = #{dayIncome, jdbcType=DOUBLE}
+            </if>
+            <if test="monExpense != null" >
+                and monExpense = #{monExpense, jdbcType=DOUBLE}
+            </if>
+            <if test="dayExpense != null" >
+                and dayExpense = #{dayExpense, jdbcType=DOUBLE}
+            </if>
+            <if test="isRemind != null" >
+                and isRemind = #{isRemind, jdbcType=VARCHAR}
+            </if>
+            <if test="code != null" >
+                and code = #{code, jdbcType=VARCHAR}
+            </if>
+            <if test="createTime != null and createTime != ''" >
+                and createtime = #{createTime, jdbcType=BIGINT}
+            </if>
+            <if test="changeTime != null and changeTime != ''" >
+                and changetime = #{changeTime, jdbcType=BIGINT}
+            </if>
+            <choose>
+                <when test="state != null and state != ''" >
+                    and state = #{state, jdbcType=VARCHAR}
+                </when>
+                <otherwise>
+                    and state = '0'
+                </otherwise>
+            </choose>
+        </trim>
+    </sql>
+
+    <sql id="WhereOfId">
+        WHERE id = #{id, jdbcType=INTEGER}
+    </sql>
+
+    <sql id="OrderBy">
+        <if test="sortMap != null" >
+            <foreach item="value" collection="sortMap" separator="," open="order by " index="key">
+                #{key} #{value}
+            </foreach>
+        </if>
+    </sql>
+
+    <insert id="insert"  parameterType="Map" useGeneratedKeys="true" keyProperty="id">
+        INSERT <include refid="Table_Name" />
+        (<include refid="Base_Column_List" />)
+        <include refid="Insert_Values" />
+    </insert>
+
+    <delete id="delete" parameterType="Map">
+        DELETE FROM <include refid="Table_Name" />
+        <include refid="WhereOfMap" />
+    </delete>
+
+    <delete id="deleteById" parameterType="Integer">
+        DELETE FROM <include refid="Table_Name" />
+        <include refid="WhereOfId" />
+    </delete>
+
+    <update id="deleteStateById" parameterType="Integer">
+        UPDATE <include refid="Table_Name" />
+        set state = '1'
+        <include refid="WhereOfId" />
+    </update>
+
+    <update id="update" parameterType="Map">
+        UPDATE <include refid="Table_Name" />
+        <include refid="Set_Values" />
+        <include refid="WhereOfId" />
+    </update>
+
+    <select id="selectCount" parameterType="Map" resultType="Long">
+        SELECT COUNT(1)
+        FROM <include refid="Table_Name" />
+        <include refid="WhereOfMap" />
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap" parameterType="Map">
+        SELECT <include refid="Base_Column_List" />
+        FROM <include refid="Table_Name" />
+        <include refid="WhereOfId" />
+    </select>
+
+    <select id="selectList" resultMap="BaseResultMap" parameterType="Map">
+        SELECT <include refid="Base_Column_List" />
+        FROM <include refid="Table_Name" />
+        <include refid="WhereOfMap" />
+    </select>
+
+    <select id="selectTopList" resultMap="BaseResultMap" parameterType="Map">
+        SELECT <include refid="Base_Column_List" />
+        FROM <include refid="Table_Name" />
+        <include refid="WhereOfMap" />
+        <include refid="OrderBy" />
+        LIMIT #{limit}
+    </select>
+
+    <select id="selectOne" resultMap="BaseResultMap" parameterType="Map">
+        SELECT <include refid="Base_Column_List" />
+        FROM <include refid="Table_Name" />
+        <include refid="WhereOfMap" />
+        <include refid="OrderBy" />
+        LIMIT 1
+    </select>
+
+    <select id="selectPageList" resultMap="BaseResultMap" parameterType="Map">
+        SELECT <include refid="Base_Column_List" />
+        FROM <include refid="Table_Name" />
+        <include refid="WhereOfMap" />
+    </select>
+
+</mapper>

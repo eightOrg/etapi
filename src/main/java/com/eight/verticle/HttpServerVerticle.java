@@ -1,11 +1,12 @@
 package com.eight.verticle;
 
 
-import com.eight.controller.DemoController;
+import com.eight.controller.SystemController;
 import com.eight.trundle.Constants;
 import com.eight.trundle.annotations.RouteHandler;
 import com.eight.trundle.annotations.RouteMapping;
 import com.eight.trundle.annotations.RouteMethod;
+import com.eight.trundle.session.SessionHandlerImplPc;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -14,30 +15,31 @@ import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-import io.vertx.ext.web.handler.BodyHandler;
-import io.vertx.ext.web.handler.CookieHandler;
-import io.vertx.ext.web.handler.CorsHandler;
+import io.vertx.ext.web.handler.*;
+import io.vertx.ext.web.sstore.LocalSessionStore;
+import io.vertx.ext.web.sstore.SessionStore;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
-import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;
+import static io.vertx.core.http.HttpHeaders.*;
 
 public class HttpServerVerticle extends AbstractVerticle {
-    private static final Logger log = LoggerFactory.getLogger(HttpServerVerticle.class);
+    private static final Logger logger = LoggerFactory.getLogger(HttpServerVerticle.class);
     private static final Reflections reflections = new Reflections(Constants.ROUTE_REFLECTIONS);
-    private DemoController demo = new DemoController();
+    private SystemController authApi;
 
     protected Router router;
-    Logger logger = LoggerFactory.getLogger(HttpServerVerticle.class);
     HttpServer server;
-
-    public HttpServerVerticle(){
+    public HttpServerVerticle(final ApplicationContext context) {
+        authApi = (SystemController) context.getBean(SystemController.class);
     }
+
 
     @Override
     public void start(Future<Void> future) throws Exception {
@@ -87,6 +89,10 @@ public class HttpServerVerticle extends AbstractVerticle {
             );
             ctx.request().headers().add(CONTENT_TYPE, "charset=utf-8");
             ctx.response().headers().add(CONTENT_TYPE, "application/json; charset=utf-8");
+            ctx.response().headers().add(ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+            ctx.response().headers().add(ACCESS_CONTROL_ALLOW_METHODS, "POST, GET, OPTIONS, PUT, DELETE, HEAD");
+            ctx.response().headers().add(ACCESS_CONTROL_ALLOW_HEADERS, "X-PINGOTHER, Origin, Content-Type, Accept, X-Requested-With, session, Dev, Version");
+            ctx.response().headers().add(ACCESS_CONTROL_MAX_AGE, "1728000");
             ctx.next();
         });
 
@@ -99,28 +105,43 @@ public class HttpServerVerticle extends AbstractVerticle {
         method.add(HttpMethod.DELETE);
         method.add(HttpMethod.HEAD);
         router.route().handler(CorsHandler.create("*").allowedMethods(method));
-        router.route().handler(BodyHandler.create());
         router.route().handler(CookieHandler.create());
-
+        SessionStore sessionStorePc = LocalSessionStore.create(vertx, "vertx-web.sessions-pc");
+        SessionStore sessionStoreApp = LocalSessionStore.create(vertx, "vertx-web.sessions-app", 15552000000l);
+        SessionHandler sessionHandlerPc = SessionHandlerImplPc.createPc(sessionStorePc, "vertx-web.sessions-pc");
+        SessionHandler sessionHandlerApp = SessionHandlerImplPc.createPc(sessionStorePc, "vertx-web.sessions-app");
+        sessionHandlerPc.setSessionTimeout(30*60*1000);
+        sessionHandlerApp.setNagHttps(false);
+        router.route().handler(sessionHandlerPc);
+        router.route().handler(sessionHandlerApp);
+        router.route().handler(BodyHandler.create());
         //此处填写不需要验证和手动注册的接口
-        /*router.get("/login").handler(demo::login);
-        router.get("/blockingMethod").handler(demo::blockingMethod);
-        //拦截/demo下的请求
-        router.get("/demo*//*").blockingHandler(demo::blockingMethod);
-        router.post("/demo*//*").blockingHandler(demo::blockingMethod);*/
+        router.post("/login").handler(authApi::login);
+        router.get("/getCode").handler(authApi::getCode);
+        router.get("/checkCode").handler(authApi::checkCode);
+        router.post("/updateOrInsertUser").handler(authApi::updateOrInsertUser);
+        //拦截/user下的请求
+        //router.get("/user/*").blockingHandler(authApi::auth);
+        //router.post("/user/*").blockingHandler(authApi::auth);
+        try {
+            //httpRouter.registerRoute(router);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("Manually Register Handler Fail，Error details："+e.getMessage());
+        }
         registerHandlers();
         return router;
     }
 
     private void registerHandlers() {
-        log.debug("Register available request handlers...");
+        logger.debug("Register available request handlers...");
 
         Set<Class<?>> handlers = reflections.getTypesAnnotatedWith(RouteHandler.class);
         for (Class<?> handler : handlers) {
             try {
                 registerNewHandler(handler);
             } catch (Exception e) {
-                log.error("Error register {}", handler);
+                logger.error("Error register {}", handler);
             }
         }
     }
@@ -139,7 +160,7 @@ public class HttpServerVerticle extends AbstractVerticle {
                 RouteMethod routeMethod = mapping.method();
                 String url = root + "/" + method.getName() + mapping.value();
                 Handler<RoutingContext> methodHandler = (Handler<RoutingContext>) method.invoke(instance);
-                log.debug("Register New Handler -> {}:{}", routeMethod, url);
+                logger.debug("Register New Handler -> {}:{}", routeMethod, url);
                 switch (routeMethod) {
                     case POST:
                         router.post(url).handler(methodHandler);

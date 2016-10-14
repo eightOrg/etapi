@@ -8,7 +8,6 @@ package com.eight.trundle.db.dao;
 import com.eight.trundle.db.pojo.Identifiable;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
-import io.vertx.core.json.JsonObject;
 
 import java.util.List;
 import java.util.Map;
@@ -17,7 +16,7 @@ public interface BaseDao<T extends Identifiable> {
     /**
      * 添加对象。
      * @param obj 要实例化的实体，不能为null
-     * @return 受影响的结果数
+     * @return 插入数据的主键id
      */
     public int insert(Map obj);
 
@@ -34,14 +33,14 @@ public interface BaseDao<T extends Identifiable> {
      * @param id 要删除的实体对象的ID，不能为null
      * @return int 受影响结果数
      */
-    public int deleteById(int id);
+    public int deleteById(Object id);
 
     /**
      * 根据ID删除对象。(只改状态，不实际删除)
      * @param id 要删除的实体对象的ID，不能为null
      * @return int 受影响结果数
      */
-    public int deleteStateById(int id);
+    public int deleteStateById(Object id);
 
     /**
      * 更新对象。
@@ -59,18 +58,11 @@ public interface BaseDao<T extends Identifiable> {
     public Long selectCount(Map query);
 
     /**
-     * 查询记录数（除了本身ID之外的）
-     * @param query 查询对象，如果为null，则查询对象总数
-     * @return long 记录总数
-     */
-    public Long selectCountExtId(Map query);
-
-    /**
-     * 通过Id查询一个对象，如果id为null这会抛出IllegalArgumentException异常
+     * 通过Id查询一个对象
      * @param id 主键，不能为null
      * @return  结果对象，如果未找到返回null
      */
-    public T selectById(int id);
+    public T selectById(Object id);
 
     /**
      * 查询对象列表
@@ -87,11 +79,18 @@ public interface BaseDao<T extends Identifiable> {
     public List<T> selectTopList(Map obj);
 
     /**
+     * 查询第一条数据
+     * @param obj 查询参数
+     * @return 结果对象
+     */
+    public T selectOne(Map obj);
+
+    /**
      * 分页查询
      * @param obj 分页对象
      * @param pb 分页信息
      * @return 结果对象列表
      */
-    public <V extends T> PageList<T> selectPageList(Map obj, PageBounds pb);
+    public PageList<T> selectPageList(Map obj, PageBounds pb);
 
 }

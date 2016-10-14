@@ -5,6 +5,8 @@ package com.eight.trundle.vertx;
  */
 public class EventBusAddress {
 
+    public static String EBSystem= "com.eight.system"; //system
+    public static String EBUser= "com.eight.user"; //user
     public static String EBDemo= "com.eight.demo"; //demo
 
 }

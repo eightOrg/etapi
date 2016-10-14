@@ -42,11 +42,12 @@ public abstract class BaseServiceImpl<T> implements BaseService {
         if (!MapUtil.isNotEmpty(obj, Constants.POJO_STATE)) {
             obj.put(Constants.POJO_STATE, Constants.STATE_OK);
         }
+        long curTime = System.currentTimeMillis();
         if (!obj.containsKey(Constants.POJO_CREATETIME)) {
-            obj.put(Constants.POJO_CREATETIME, System.currentTimeMillis());
+            obj.put(Constants.POJO_CREATETIME, curTime);
         }
         if (!obj.containsKey(Constants.POJO_CHANGETIME)) {
-            obj.put(Constants.POJO_CHANGETIME, System.currentTimeMillis());
+            obj.put(Constants.POJO_CHANGETIME, curTime);
         }
         int count = getBaseDao().insert(obj);
         return getResultBaseOb(count > 0, count + "个元素被插入", "插入元素失败");

@@ -51,6 +51,12 @@ public class SystemServiceImpl implements SystemService {
         } else if (obj.get("mobilephone") == null){
             return JsonUtil.getFaildOb("手机号不能为空!");
         }
+        if (!params.containsKey("password")) {
+            return JsonUtil.getFaildOb("必须输入密码");
+        }
+        String password = params.getValue("password").toString();
+        password = MD5.MD5(password);
+        obj.put("password", password);
         UserRegister userRegister = userRegisterDao.selectById(obj.get("mobilephone").toString());
         if (userRegister != null){
             if ("1".equals(userRegister.getCode())) {
@@ -60,12 +66,6 @@ public class SystemServiceImpl implements SystemService {
                 return JsonUtil.getTrueOb(count + "个元素被更新");
             }
         } else {
-            if (!params.containsKey("password")) {
-                return JsonUtil.getFaildOb("必须输入密码");
-            }
-            String password = params.getValue("password").toString();
-            password = MD5.MD5(password);
-            params.put("password", password);
             if (!MapUtil.isNotEmpty(obj, Constants.POJO_STATE)) {
                 obj.put(Constants.POJO_STATE, Constants.STATE_OK);
             }

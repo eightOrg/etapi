@@ -186,7 +186,7 @@
     <insert id="insert"  parameterType="Map" useGeneratedKeys="true" keyProperty="id">
         INSERT <include refid="Table_Name" />
         (<include refid="Base_Column_List" />)
-        (<include refid="Insert_Values" />)
+        <include refid="Insert_Values" />
     </insert>
 
     <delete id="delete" parameterType="Map">

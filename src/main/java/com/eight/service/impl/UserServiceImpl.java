@@ -7,6 +7,7 @@ import com.eight.trundle.crypt.MD5;
 import com.eight.trundle.db.dao.BaseDao;
 import com.eight.trundle.db.service.impl.BaseServiceImpl;
 import com.eight.trundle.ob.BaseOb;
+import com.eight.trundle.params.JsonUtil;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
@@ -33,7 +34,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     @Override
     public JsonObject insert(JsonObject params) {
         if (!params.containsKey("password")) {
-            return new JsonObject(Json.encode(BaseOb.getFaildOb().setMsg("必须输入密码")));
+            return JsonUtil.getFaildOb("必须输入密码");
         }
         String password = params.getValue("password").toString();
         password = MD5.MD5(password);

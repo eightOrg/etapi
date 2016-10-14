@@ -5,15 +5,13 @@ package com.eight.trundle.db.dao;
  */
 
 
-import com.eight.trundle.db.pojo.Identifiable;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
-import io.vertx.core.json.JsonObject;
 
 import java.util.List;
 import java.util.Map;
 
-public interface BaseDao<T extends Identifiable> {
+public interface BaseDao<T> {
     /**
      * 添加对象。
      * @param obj 要实例化的实体，不能为null
@@ -34,14 +32,14 @@ public interface BaseDao<T extends Identifiable> {
      * @param id 要删除的实体对象的ID，不能为null
      * @return int 受影响结果数
      */
-    public int deleteById(int id);
+    public int deleteById(Object id);
 
     /**
      * 根据ID删除对象。(只改状态，不实际删除)
      * @param id 要删除的实体对象的ID，不能为null
      * @return int 受影响结果数
      */
-    public int deleteStateById(int id);
+    public int deleteStateById(Object id);
 
     /**
      * 更新对象。
@@ -63,7 +61,7 @@ public interface BaseDao<T extends Identifiable> {
      * @param id 主键，不能为null
      * @return  结果对象，如果未找到返回null
      */
-    public T selectById(int id);
+    public T selectById(Object id);
 
     /**
      * 查询对象列表

@@ -2,11 +2,11 @@ package com.eight.trundle.db.service.impl;
 
 import com.eight.trundle.Constants;
 import com.eight.trundle.db.dao.BaseDao;
-import com.eight.trundle.db.pojo.Identifiable;
 import com.eight.trundle.db.service.BaseService;
 import com.eight.trundle.ob.BaseOb;
 import com.eight.trundle.ob.ListOb;
 import com.eight.trundle.ob.OneOb;
+import com.eight.trundle.params.JsonUtil;
 import com.eight.trundle.params.MapUtil;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
@@ -21,7 +21,7 @@ import java.util.Map;
  * Created by miao on 2016/8/12.
  */
 @Service("BaseService")
-public abstract class BaseServiceImpl<T extends Identifiable> implements BaseService {
+public abstract class BaseServiceImpl<T> implements BaseService {
     /**
      * 获取Dao，在子类里通过注入的方式实现
      * @return
@@ -37,7 +37,7 @@ public abstract class BaseServiceImpl<T extends Identifiable> implements BaseSer
     public JsonObject insert(JsonObject params) {
         Map obj = params.getMap();
         if (obj == null) {
-            return new JsonObject(Json.encode(BaseOb.getFaildOb().setMsg("插入元素不能为空!")));
+            return JsonUtil.getFaildOb("插入元素不能为空!");
         }
         if (!MapUtil.isNotEmpty(obj, Constants.POJO_STATE)) {
             obj.put(Constants.POJO_STATE, Constants.STATE_OK);
@@ -61,7 +61,7 @@ public abstract class BaseServiceImpl<T extends Identifiable> implements BaseSer
     @Override
     public JsonObject insertInBatch(JsonObject params) {
         if (MapUtil.isEmpty(params, Constants.PARAMS_OBJLIST)) {
-            return new JsonObject(Json.encode(BaseOb.getFaildOb().setMsg("元素插入列表不能为空！")));
+            return JsonUtil.getFaildOb("元素插入列表不能为空!");
         }
         List<JsonObject> objList = (List<JsonObject>) params.getValue(Constants.PARAMS_OBJLIST);
         int count = 0;
@@ -70,7 +70,7 @@ public abstract class BaseServiceImpl<T extends Identifiable> implements BaseSer
                 count++;
             }
         }
-        return new JsonObject(Json.encode(new BaseOb().setMsg(count + "个元素被插入")));
+        return JsonUtil.getTrueOb(count + "个元素被插入");
     }
 
     /**
@@ -93,11 +93,11 @@ public abstract class BaseServiceImpl<T extends Identifiable> implements BaseSer
     @Override
     public JsonObject deleteById(JsonObject params) {
         if (MapUtil.isEmpty(params, Constants.POJO_ID)) {
-            return new JsonObject(Json.encode(BaseOb.getFaildOb().setMsg("元素不能为空！")));
+            return JsonUtil.getFaildOb("元素不能为空！");
         }
         int id = (Integer) params.getValue(Constants.POJO_ID);
         if (id <= 0) {
-            return new JsonObject(Json.encode(BaseOb.getFaildOb().setMsg("元素id必须大于0！")));
+            return JsonUtil.getFaildOb("元素id必须大于0！");
         }
         int count = getBaseDao().deleteById(id);
         return getResultBaseOb(count> 0, count + "个元素被删除", "删除元素失败，不含该元素");
@@ -111,7 +111,7 @@ public abstract class BaseServiceImpl<T extends Identifiable> implements BaseSer
     @Override
     public JsonObject deleteByIdInBatch(JsonObject params) {
         if (MapUtil.isEmpty(params, Constants.PARAMS_IDLIST)) {
-            return new JsonObject(Json.encode(BaseOb.getFaildOb().setMsg("元素删除列表为空！")));
+            return JsonUtil.getFaildOb("元素删除列表为空！");
         }
         int count = 0;
         List<JsonObject> idList = (List<JsonObject>) params.getValue(Constants.PARAMS_IDLIST);
@@ -120,7 +120,7 @@ public abstract class BaseServiceImpl<T extends Identifiable> implements BaseSer
                 count++;
             }
         }
-        return new JsonObject(Json.encode(new BaseOb().setMsg(count + "个元素被删除")));
+        return JsonUtil.getTrueOb(count + "个元素被删除");
     }
 
     /**
@@ -131,11 +131,11 @@ public abstract class BaseServiceImpl<T extends Identifiable> implements BaseSer
     @Override
     public JsonObject deleteStateById(JsonObject params){
         if (MapUtil.isEmpty(params, Constants.POJO_ID)) {
-            return new JsonObject(Json.encode(BaseOb.getFaildOb().setMsg("元素不能为空！")));
+            return JsonUtil.getFaildOb("元素不能为空！");
         }
         int id = (Integer) params.getValue(Constants.POJO_ID);
         if (id <= 0){
-            return new JsonObject(Json.encode(BaseOb.getFaildOb().setMsg("元素id必须大于0！")));
+            return JsonUtil.getFaildOb("元素id必须大于0！");
         }
         int count = getBaseDao().deleteStateById(id);
         return getResultBaseOb(count> 0, count + "个元素被禁用", "禁用元素失败");
@@ -149,7 +149,7 @@ public abstract class BaseServiceImpl<T extends Identifiable> implements BaseSer
     @Override
     public JsonObject deleteStateByIdInBatch(JsonObject params){
         if (MapUtil.isEmpty(params, Constants.PARAMS_IDLIST)) {
-            return new JsonObject(Json.encode(BaseOb.getFaildOb().setMsg("元素禁用列表为空！")));
+            return JsonUtil.getFaildOb("元素禁用列表为空！");
         }
         List<JsonObject> idList = (List<JsonObject>) params.getValue(Constants.PARAMS_IDLIST);
         int count = 0;
@@ -158,7 +158,7 @@ public abstract class BaseServiceImpl<T extends Identifiable> implements BaseSer
                 count++;
             }
         }
-        return new JsonObject(Json.encode(new BaseOb().setMsg(count + "个元素被禁用")));
+        return JsonUtil.getTrueOb(count + "个元素被禁用");
     }
 
     /**
@@ -170,11 +170,11 @@ public abstract class BaseServiceImpl<T extends Identifiable> implements BaseSer
     @Override
     public JsonObject update(JsonObject params) {
         if (params == null || MapUtil.isEmpty(params, Constants.POJO_ID)) {
-            return new JsonObject(Json.encode(BaseOb.getFaildOb().setMsg("元素为空或id为空！")));
+            return JsonUtil.getFaildOb("元素为空或id为空！");
         }
         int id = (Integer) params.getValue(Constants.POJO_ID);
         if (id <= 0) {
-            return new JsonObject(Json.encode(BaseOb.getFaildOb().setMsg("元素id必须大于0！")));
+            return JsonUtil.getFaildOb("元素id必须大于0！");
         }
         int count = getBaseDao().update(params.getMap());
         return getResultBaseOb(count> 0, count + "个元素被更新", "更新元素失败");
@@ -202,11 +202,11 @@ public abstract class BaseServiceImpl<T extends Identifiable> implements BaseSer
     @Override
     public JsonObject selectById(JsonObject params) {
         if (params == null || MapUtil.isEmpty(params, Constants.POJO_ID)) {
-            return new JsonObject(Json.encode(BaseOb.getFaildOb().setMsg("元素为空或id为空！")));
+            return JsonUtil.getFaildOb("元素为空或id为空！");
         }
         int id = (Integer) params.getValue(Constants.POJO_ID);
         if (id <= 0) {
-            return new JsonObject(Json.encode(BaseOb.getFaildOb().setMsg("元素id必须大于0！")));
+            return JsonUtil.getFaildOb("元素id必须大于0！");
         }
         return getResultOneOb(getBaseDao().selectById(id), "元素查找成功", "元素查找失败");
     }
@@ -257,11 +257,11 @@ public abstract class BaseServiceImpl<T extends Identifiable> implements BaseSer
     @Override
     public JsonObject selectTopList(JsonObject params) {
         if (MapUtil.isEmpty(params, Constants.PARAMS_LIMIT)) {
-            return new JsonObject(Json.encode(BaseOb.getFaildOb().setMsg("查询数量参数不正确！")));
+            return JsonUtil.getFaildOb("查询数量参数不正确！");
         }
         int count = (Integer) params.getValue(Constants.PARAMS_LIMIT);
         if (count < 1) {
-            return new JsonObject(Json.encode(BaseOb.getFaildOb().setMsg("查询数量不能小于1！")));
+            return JsonUtil.getFaildOb("查询数量不能小于1！");
         }
         List<T> result = getBaseDao().selectTopList(params.getMap());
         ListOb<T> obList = new ListOb();
@@ -289,11 +289,11 @@ public abstract class BaseServiceImpl<T extends Identifiable> implements BaseSer
     }
 
     private JsonObject getResultBaseOb(boolean isTrue, String trueMsg, String wrongMsg) {
-        return isTrue?new JsonObject(Json.encode(trueMsg.isEmpty()?new BaseOb():new BaseOb().setMsg(trueMsg)))
-                :new JsonObject(Json.encode(wrongMsg.isEmpty()?BaseOb.getFaildOb():BaseOb.getFaildOb().setMsg(wrongMsg)));
+        return isTrue?(trueMsg.isEmpty()?JsonUtil.getTrueOb():JsonUtil.getTrueOb(trueMsg))
+                :(wrongMsg.isEmpty()?JsonUtil.getFaildOb():JsonUtil.getFaildOb(wrongMsg));
     }
     private JsonObject getResultOneOb(T result, String trueMsg, String wrongMsg) {
-        return result != null?new JsonObject(Json.encode(trueMsg.isEmpty()?new OneOb().setOb(result):new OneOb().setOb(result).setMsg(trueMsg)))
-                :new JsonObject(Json.encode(wrongMsg.isEmpty()?BaseOb.getFaildOb():BaseOb.getFaildOb().setMsg(wrongMsg)));
+        return result != null?(trueMsg.isEmpty()?JsonUtil.getTrueOb(result):JsonUtil.getTrueOb(result, trueMsg))
+                :(wrongMsg.isEmpty()?JsonUtil.getFaildOb():JsonUtil.getFaildOb(wrongMsg));
     }
 }

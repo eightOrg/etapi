@@ -91,7 +91,7 @@ public class HttpServerVerticle extends AbstractVerticle {
             ctx.response().headers().add(CONTENT_TYPE, "application/json; charset=utf-8");
             ctx.response().headers().add(ACCESS_CONTROL_ALLOW_ORIGIN, "*");
             ctx.response().headers().add(ACCESS_CONTROL_ALLOW_METHODS, "POST, GET, OPTIONS, PUT, DELETE, HEAD");
-            ctx.response().headers().add(ACCESS_CONTROL_ALLOW_HEADERS, "X-PINGOTHER, Origin,Content-Type, Accept, X-Requested-With, session,Dev,Version");
+            ctx.response().headers().add(ACCESS_CONTROL_ALLOW_HEADERS, "X-PINGOTHER, Origin, Content-Type, Accept, X-Requested-With, session, Dev, Version");
             ctx.response().headers().add(ACCESS_CONTROL_MAX_AGE, "1728000");
             ctx.next();
         });
@@ -117,6 +117,7 @@ public class HttpServerVerticle extends AbstractVerticle {
         router.route().handler(BodyHandler.create());
         //此处填写不需要验证和手动注册的接口
         router.post("/login").handler(authApi::login);
+        router.get("/register").handler(authApi::register);
         //拦截/user下的请求
         //router.get("/user/*").blockingHandler(authApi::auth);
         //router.post("/user/*").blockingHandler(authApi::auth);

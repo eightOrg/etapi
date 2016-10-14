@@ -80,4 +80,18 @@ public class SystemController {
             routingContext.next();
         }
     }
+
+    /**
+     * 注册
+     */
+    public void register(RoutingContext routingContext){
+        DeliveryOptions options = new DeliveryOptions().addHeader("method", "register");
+        JsonObject ob= ParamUtil.getParamJson(routingContext.request().params());
+        logger.debug("params===========" + ob !=null?ob.toString():"null");
+        routingContext.vertx().eventBus().<JsonObject>send(address, ob, options, result -> {
+            JsonObject object = result.result().body();
+            logger.debug("result===========" + object.encode());
+            routingContext.response().end(object.encode());
+        });
+    }
 }

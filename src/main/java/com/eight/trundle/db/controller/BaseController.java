@@ -15,10 +15,10 @@ public abstract class BaseController {
     public abstract Logger getLogger();
     public abstract String getAddress();
 
-    /**11111111111111111111111111111111111111
+    /**
      * 添加对象。
      */
-    @RouteMapping(method = RouteMethod.GET)
+    @RouteMapping(method = RouteMethod.POST)
     public Handler<RoutingContext> insert(){
         String method = "insert";
         return HandleTemplet.getHandler(method, getAddress(), getLogger());
@@ -33,19 +33,19 @@ public abstract class BaseController {
         return HandleTemplet.getHandler(method, getAddress(), getLogger());
     }
 
-    /**11111111111111111111111111111111111
+    /**
      * 删除对象。
      */
-    @RouteMapping(method = RouteMethod.GET)
+    @RouteMapping(method = RouteMethod.POST)
     public Handler<RoutingContext> delete(){
         String method = "delete";
         return HandleTemplet.getHandler(method, getAddress(), getLogger());
     }
 
-    /**111111111111111111111111111111111111111111
+    /**
      * 根据Id删除对象。
      */
-    @RouteMapping(method = RouteMethod.GET)
+    @RouteMapping(method = RouteMethod.POST)
     public Handler<RoutingContext> deleteById(){
         String method = "deleteById";
         return HandleTemplet.getHandler(method, getAddress(), getLogger());
@@ -60,10 +60,10 @@ public abstract class BaseController {
         return HandleTemplet.getHandler(method, getAddress(), getLogger());
     }
 
-    /**1111111111111111111111111111111111111111111111
+    /**
      * 根据Id删除对象。（只改状态，不实际删除）
      */
-    @RouteMapping(method = RouteMethod.GET)
+    @RouteMapping(method = RouteMethod.POST)
     public Handler<RoutingContext> deleteStateById(){
         String method = "deleteStateById";
         return HandleTemplet.getHandler(method, getAddress(), getLogger());
@@ -78,10 +78,10 @@ public abstract class BaseController {
         return HandleTemplet.getHandler(method, getAddress(), getLogger());
     }
 
-    /**1111111111111111111111111111111111111111
+    /**
      * 更新对象。
      */
-    @RouteMapping(method = RouteMethod.GET)
+    @RouteMapping(method = RouteMethod.POST)
     public Handler<RoutingContext> update(){
         String method = "update";
         return HandleTemplet.getHandler(method, getAddress(), getLogger());

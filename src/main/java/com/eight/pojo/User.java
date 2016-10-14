@@ -1,11 +1,23 @@
 package com.eight.pojo;
 
+import com.eight.trundle.db.pojo.BasePojo;
+import com.eight.trundle.db.pojo.Identifiable;
+
+import java.beans.PropertyDescriptor;
 import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.springframework.beans.BeanUtils.getPropertyDescriptor;
 
 /**
  * Created by miaoch on 2016/8/11.
  */
-public class User implements Serializable {
+public class User extends BasePojo {
     private int id;
     private String state;
     private long createTime;
@@ -194,4 +206,5 @@ public class User implements Serializable {
     public void setCode(String code) {
         this.code = code;
     }
+
 }

@@ -22,8 +22,6 @@ public class EightRunner {
         logger.debug("=======================Runner  Deployment======================");
 
         final Vertx vertx = Vertx.vertx();
-        //暂时不启用DemoVerticle
-        //vertx.deployVerticle(new DemoVerticle(context), new DeploymentOptions());
         vertx.deployVerticle(new SystemVerticle(context), new DeploymentOptions());
         vertx.deployVerticle(new UserVerticle(context), new DeploymentOptions());
         vertx.deployVerticle(new HttpServerVerticle(context));

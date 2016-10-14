@@ -1,11 +1,14 @@
 package com.eight.pojo;
 
+import com.eight.trundle.db.pojo.BasePojo;
+import com.eight.trundle.db.pojo.Identifiable;
+
 import java.io.Serializable;
 
 /**
  * Created by miaoch on 2016/8/11.
  */
-public class UserRegister implements Serializable {
+public class UserRegister extends BasePojo {
     private String mobilephone;
     private String password;
     private String code;

@@ -5,13 +5,14 @@ package com.eight.trundle.db.dao;
  */
 
 
+import com.eight.trundle.db.pojo.Identifiable;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 
 import java.util.List;
 import java.util.Map;
 
-public interface BaseDao<T> {
+public interface BaseDao<T extends Identifiable> {
     /**
      * 添加对象。
      * @param obj 要实例化的实体，不能为null

@@ -82,7 +82,33 @@ public class SystemController {
     }
 
     /**
-     * 注册
+     * 获取验证码 getType 1: 忘记密码 2: 新用户注册
+     */
+    public void getCode(RoutingContext routingContext){
+        DeliveryOptions options = new DeliveryOptions().addHeader("method", "getCode");
+        JsonObject ob= ParamUtil.getParamJson(routingContext.request().params());
+        logger.debug("params===========" + ob !=null?ob.toString():"null");
+        routingContext.vertx().eventBus().<JsonObject>send(address, ob, options, result -> {
+            JsonObject object = result.result().body();
+            logger.debug("result===========" + object.encode());
+            routingContext.response().end(object.encode());
+        });
+    }
+    /**
+     * 获取验证码 type:忘记密码 新用户注册
+     */
+    /*public void getCode(RoutingContext routingContext){
+        DeliveryOptions options = new DeliveryOptions().addHeader("method", "getCode");
+        JsonObject ob= ParamUtil.getParamJson(routingContext.request().params());
+        logger.debug("params===========" + ob !=null?ob.toString():"null");
+        routingContext.vertx().eventBus().<JsonObject>send(address, ob, options, result -> {
+            JsonObject object = result.result().body();
+            logger.debug("result===========" + object.encode());
+            routingContext.response().end(object.encode());
+        });
+    }*/
+    /**
+     * 注册成功
      */
     public void register(RoutingContext routingContext){
         DeliveryOptions options = new DeliveryOptions().addHeader("method", "register");
@@ -94,4 +120,18 @@ public class SystemController {
             routingContext.response().end(object.encode());
         });
     }
+
+    /**
+     * 注册提交验证码 并生成该用户
+     */
+    /*public void submit(RoutingContext routingContext){
+        DeliveryOptions options = new DeliveryOptions().addHeader("method", "register");
+        JsonObject ob= ParamUtil.getParamJson(routingContext.request().params());
+        logger.debug("params===========" + ob !=null?ob.toString():"null");
+        routingContext.vertx().eventBus().<JsonObject>send(address, ob, options, result -> {
+            JsonObject object = result.result().body();
+            logger.debug("result===========" + object.encode());
+            routingContext.response().end(object.encode());
+        });
+    }*/
 }

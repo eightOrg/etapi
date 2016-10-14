@@ -49,4 +49,5 @@ public class MapUtil {
     public static boolean isEmpty (JsonObject obj, String key) {
         return isEmpty(obj.getMap(), key);
     }
+
 }

@@ -32,8 +32,11 @@
             var kv = 'username=hange';
             var method = 'get';
 
-            $("input[name='apiAddress']").val(apiAddress);
-            $("input[name='kv']").val(kv);
+            $("input[name='apiAddress']").val($.cookie("address"));
+            $("input[name='kv']").val($.cookie("kv"));
+
+            /*$("input[name='apiAddress']").val(apiAddress);
+            $("input[name='kv']").val(kv);*/
             if (method == 'post') {
                 $("input:radio[name='method']").eq(1).attr("checked",true);
             }
@@ -42,6 +45,7 @@
                 var method =  $("input[name='method']:checked").val();
                 var address =  $("input[name='apiAddress']").val();
                 var key_value = $("input[name='kv']").val();
+                saveCookie();
                 $.ajax({
                     type: method,
                     url: getApiPath(address + "?" + key_value),
@@ -63,6 +67,14 @@
                 }
             });
         });
+
+        //保存cookie
+        function saveCookie() {
+            var address =  $("input[name='apiAddress']").val();
+            var key_value = $("input[name='kv']").val();
+            $.cookie("address", address, { expires: 7 }); // 存储一个带7天期限的 cookie
+            $.cookie("kv", key_value, { expires: 7 }); // 存储一个带7天期限的 cookie
+        }
     </script>
 </head>
 <body>

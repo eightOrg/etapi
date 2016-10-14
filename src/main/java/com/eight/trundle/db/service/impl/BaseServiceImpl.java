@@ -2,6 +2,7 @@ package com.eight.trundle.db.service.impl;
 
 import com.eight.trundle.Constants;
 import com.eight.trundle.db.dao.BaseDao;
+import com.eight.trundle.db.pojo.Identifiable;
 import com.eight.trundle.db.service.BaseService;
 import com.eight.trundle.ob.BaseOb;
 import com.eight.trundle.ob.ListOb;
@@ -21,7 +22,7 @@ import java.util.Map;
  * Created by miao on 2016/8/12.
  */
 @Service("BaseService")
-public abstract class BaseServiceImpl<T> implements BaseService {
+public abstract class BaseServiceImpl<T extends Identifiable> implements BaseService {
     /**
      * 获取Dao，在子类里通过注入的方式实现
      * @return

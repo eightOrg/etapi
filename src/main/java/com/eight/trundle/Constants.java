@@ -13,6 +13,7 @@ public class Constants {
     //JsonObject常量
     public static final int DEFAULT_LIMIT = 10; //DEFAULT_LIMIT
     public static final int DEFAULT_PAGE = 1; //DEFAULT_PAGE
+    public static final int DEFAULT_FRIENDLY = 50; //DEFAULT_FRIENDLY
     //ob
 	public static final String RESULT_OB_FLAG = "flag"; //flag
 	public static final String RESULT_OB_MSG = "msg"; //msg
@@ -30,6 +31,7 @@ public class Constants {
 	public static final String POJO_STATE = "state";
 	public static final String POJO_CREATETIME = "createTime";
 	public static final String POJO_CHANGETIME = "changeTime";
+	public static final String POJO_FRIENDLY = "friendly";
 	//状态
 	public static final TreeMap<String, String> STATEMAP = new TreeMap<String, String>();
 	public static final String STATE_OK = "0";//正常

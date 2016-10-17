@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -128,11 +129,12 @@ public class SystemServiceImpl implements SystemService {
         if (!params.containsKey("password")) {
             return JsonUtil.getFaildOb("密码不能为空！");
         }
+        Map condition = new HashMap();
+        condition.put("mobilephone", params.getString("mobilephone"));
         String password = params.getValue("password").toString();
         password = MD5.MD5(password);
         params.put("password", password);
-        Map obj = params.getMap();
-        User user = userDao.selectOne(obj);
+        User user = userDao.selectOne(condition);
         if (params.containsKey("getType")) {
             String getType = params.getValue("getType").toString();
             if ("1".equals(getType)) { //更新密码
@@ -141,10 +143,11 @@ public class SystemServiceImpl implements SystemService {
                 return JsonUtil.getTrueOb(count + "个元素被更新");
             } else if ("2".equals(getType)) { //更新或插入整个用户
                 if (user == null) {
-                    int count = userDao.insert(obj);
+                    int count = userDao.insert(params.getMap());
                     return JsonUtil.getTrueOb(count + "个元素被插入");
                 } else {
-                    int count = userDao.update(obj);
+                    params.put("id", user.getId());
+                    int count = userDao.update(params.getMap());
                     return JsonUtil.getTrueOb(count + "个元素被更新");
                 }
             } else {

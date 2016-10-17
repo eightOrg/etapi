@@ -217,7 +217,7 @@
         <include refid="WhereOfMap" />
     </select>
 
-    <select id="selectById" resultMap="BaseResultMap" parameterType="Map">
+    <select id="selectById" resultMap="BaseResultMap" parameterType="Integer">
         SELECT <include refid="Base_Column_List" />
         FROM <include refid="Table_Name" />
         <include refid="WhereOfId" />

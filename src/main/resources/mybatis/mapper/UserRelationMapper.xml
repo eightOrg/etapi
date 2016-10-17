@@ -1,56 +1,67 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.eight.dao.UserRegisterDao">
-    <resultMap id="BaseResultMap" type="com.eight.pojo.UserRegister" >
-        <id column="mobilephone" property="mobilephone" jdbcType="VARCHAR" />
-        <result column="password" property="password" jdbcType="VARCHAR" />
-        <result column="code" property="code" jdbcType="VARCHAR" />
-        <result column="state" property="state" jdbcType="VARCHAR" />
+<mapper namespace="com.eight.dao.UserRelationDao">
+    <resultMap id="BaseResultMap" type="com.eight.pojo.UserRelation" >
+        <id column="souid" property="souId" jdbcType="INTEGER" />
+        <id column="desid" property="desId" jdbcType="INTEGER" />
+        <result column="friendly" property="friendly" jdbcType="INTEGER" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
         <result column="createtime" property="createTime" jdbcType="BIGINT" />
+        <result column="changetime" property="changeTime" jdbcType="BIGINT" />
+        <result column="state" property="state" jdbcType="VARCHAR" />
     </resultMap>
 
     <sql id="Table_Name">
-        et_user_register
+        et_user_relation
     </sql>
 
     <sql id="Base_Column_List">
-        mobilephone, password, code, state, createtime
+        souid, desid, friendly, remark, createtime, changetime, state
     </sql>
 
     <sql id="Insert_Values">
-        VALUES (#{mobilephone}, #{password}, #{code}, #{state}, #{createTime})
+        VALUES (#{souId}, #{desId}, #{friendly}, #{remark}, #{createTime}, #{changeTime}, #{state})
     </sql>
 
     <sql id="Set_Values">
         <trim prefix="set" suffixOverrides="," >
-            <if test="password != null" >
-                password = #{password, jdbcType=VARCHAR},
+            <if test="friendly != null" >
+                friendly = #{friendly, jdbcType=INTEGER},
             </if>
-            <if test="code != null" >
-                code = #{code, jdbcType=VARCHAR},
-            </if>
-            <if test="state != null and state != ''" >
-                state = #{state, jdbcType=VARCHAR},
+            <if test="remark != null" >
+                remark = #{remark, jdbcType=VARCHAR},
             </if>
             <if test="createTime != null and createTime != ''" >
                 createtime = #{createTime, jdbcType=BIGINT},
+            </if>
+            <if test="changeTime != null and changeTime != ''" >
+                changetime = #{changeTime, jdbcType=BIGINT},
+            </if>
+            <if test="state != null and state != ''" >
+                state = #{state, jdbcType=VARCHAR},
             </if>
         </trim>
     </sql>
 
     <sql id="WhereOfMap">
         <trim prefix="where" prefixOverrides="and" >
-            <if test="mobilephone != null" >
-                and mobilephone = #{mobilephone, jdbcType=VARCHAR}
+            <if test="desId != null" >
+                and desid = #{desId, jdbcType=INTEGER}
             </if>
-            <if test="password != null" >
-                and password = #{password, jdbcType=VARCHAR}
+            <if test="souId != null" >
+                and souid = #{souId, jdbcType=INTEGER}
             </if>
-            <if test="code != null" >
-                and code = #{code, jdbcType=VARCHAR}
+            <if test="friendly != null" >
+                and friendly = #{friendly, jdbcType=INTEGER}
+            </if>
+            <if test="remark != null" >
+                and remark = #{remark, jdbcType=VARCHAR}
             </if>
             <if test="createTime != null and createTime != ''" >
                 and createtime = #{createTime, jdbcType=BIGINT}
+            </if>
+            <if test="changeTime != null and changeTime != ''" >
+                and changetime = #{changeTime, jdbcType=BIGINT}
             </if>
             <choose>
                 <when test="state != null and state != ''" >
@@ -64,7 +75,7 @@
     </sql>
 
     <sql id="WhereOfId">
-        WHERE mobilephone = #{mobilephone, jdbcType=VARCHAR}
+        WHERE souid = #{souId, jdbcType=INTEGER} AND desid = #{desId, jdbcType=INTEGER}
     </sql>
 
     <sql id="OrderBy">
@@ -86,12 +97,12 @@
         <include refid="WhereOfMap" />
     </delete>
 
-    <delete id="deleteById" parameterType="String">
+    <delete id="deleteById" parameterType="Map">
         DELETE FROM <include refid="Table_Name" />
         <include refid="WhereOfId" />
     </delete>
 
-    <update id="deleteStateById" parameterType="String">
+    <update id="deleteStateById" parameterType="Map">
         UPDATE <include refid="Table_Name" />
         set state = '1'
         <include refid="WhereOfId" />
@@ -109,7 +120,7 @@
         <include refid="WhereOfMap" />
     </select>
 
-    <select id="selectById" resultMap="BaseResultMap" parameterType="String">
+    <select id="selectById" resultMap="BaseResultMap" parameterType="Map">
         SELECT <include refid="Base_Column_List" />
         FROM <include refid="Table_Name" />
         <include refid="WhereOfId" />

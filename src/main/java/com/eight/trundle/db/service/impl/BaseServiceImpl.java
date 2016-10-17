@@ -40,18 +40,9 @@ public abstract class BaseServiceImpl<T extends Identifiable> implements BaseSer
         if (obj == null) {
             return JsonUtil.getFaildOb("插入元素不能为空!");
         }
-        if (!MapUtil.isNotEmpty(obj, Constants.POJO_STATE)) {
-            obj.put(Constants.POJO_STATE, Constants.STATE_OK);
-        }
-        long curTime = System.currentTimeMillis();
-        if (!obj.containsKey(Constants.POJO_CREATETIME)) {
-            obj.put(Constants.POJO_CREATETIME, curTime);
-        }
-        if (!obj.containsKey(Constants.POJO_CHANGETIME)) {
-            obj.put(Constants.POJO_CHANGETIME, curTime);
-        }
-        int count = getBaseDao().insert(obj);
-        return getResultBaseOb(count > 0, count + "个元素被插入", "插入元素失败");
+        MapUtil.setDefaultParams(obj);
+        getBaseDao().insert(obj);
+        return JsonUtil.getTrueOb();
     }
 
     /**

@@ -1,19 +1,22 @@
 package com.eight.service.impl;
 
 import com.eight.dao.UserDao;
+import com.eight.dao.UserRelationDao;
 import com.eight.pojo.User;
 import com.eight.service.UserService;
+import com.eight.trundle.Constants;
 import com.eight.trundle.crypt.MD5;
 import com.eight.trundle.db.dao.BaseDao;
 import com.eight.trundle.db.service.impl.BaseServiceImpl;
-import com.eight.trundle.ob.BaseOb;
 import com.eight.trundle.params.JsonUtil;
-import io.vertx.core.json.Json;
+import com.eight.trundle.params.MapUtil;
 import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 
 /**
@@ -25,6 +28,8 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private UserRelationDao userRelationDao;
 
     @Override
     protected BaseDao<User> getBaseDao() {
@@ -41,4 +46,16 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         params.put("password", password);
         return super.insert(params);
     }
+
+    @Override
+    public JsonObject addFriend(JsonObject params) {
+        Map obj = params.getMap();
+        MapUtil.setDefaultParams(obj);
+        if (!obj.containsKey(Constants.POJO_FRIENDLY)) {
+            obj.put(Constants.POJO_FRIENDLY, Constants.DEFAULT_FRIENDLY);
+        }
+        userRelationDao.insert(obj);
+        return JsonUtil.getTrueOb();
+    }
+
 }

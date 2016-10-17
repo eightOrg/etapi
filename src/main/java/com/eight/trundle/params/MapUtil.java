@@ -1,5 +1,6 @@
 package com.eight.trundle.params;
 
+import com.eight.trundle.Constants;
 import io.vertx.core.json.JsonObject;
 
 import java.util.Map;
@@ -48,6 +49,19 @@ public class MapUtil {
      */
     public static boolean isEmpty (JsonObject obj, String key) {
         return isEmpty(obj.getMap(), key);
+    }
+
+    public static void setDefaultParams(Map obj) {
+        if (!isNotEmpty(obj, Constants.POJO_STATE)) {
+            obj.put(Constants.POJO_STATE, Constants.STATE_OK);
+        }
+        long curTime = System.currentTimeMillis();
+        if (!obj.containsKey(Constants.POJO_CREATETIME)) {
+            obj.put(Constants.POJO_CREATETIME, curTime);
+        }
+        if (!obj.containsKey(Constants.POJO_CHANGETIME)) {
+            obj.put(Constants.POJO_CHANGETIME, curTime);
+        }
     }
 
 }

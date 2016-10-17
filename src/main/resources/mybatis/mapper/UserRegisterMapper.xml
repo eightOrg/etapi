@@ -93,7 +93,8 @@
 
     <update id="deleteStateById" parameterType="String">
         UPDATE <include refid="Table_Name" />
-        set state = '1'
+        SET state = '1',
+        changetime = unix_timestamp(now()) * 1000
         <include refid="WhereOfId" />
     </update>
 

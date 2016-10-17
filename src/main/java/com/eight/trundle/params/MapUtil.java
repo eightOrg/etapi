@@ -4,7 +4,6 @@ import com.eight.trundle.Constants;
 import io.vertx.core.json.JsonObject;
 
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by miaoch on 2016/8/14.
@@ -60,6 +59,13 @@ public class MapUtil {
             obj.put(Constants.POJO_CREATETIME, curTime);
         }
         if (!obj.containsKey(Constants.POJO_CHANGETIME)) {
+            obj.put(Constants.POJO_CHANGETIME, curTime);
+        }
+    }
+
+    public static void setChangeTime(Map obj) {
+        if (!obj.containsKey(Constants.POJO_CHANGETIME)) {
+            long curTime = System.currentTimeMillis();
             obj.put(Constants.POJO_CHANGETIME, curTime);
         }
     }

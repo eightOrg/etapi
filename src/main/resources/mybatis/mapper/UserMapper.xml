@@ -89,14 +89,19 @@
             <if test="code != null" >
                 code = #{code, jdbcType=VARCHAR},
             </if>
-            <if test="state != null and state != ''" >
-                state = #{state, jdbcType=VARCHAR},
-            </if>
-            <if test="changeTime != null and changeTime != ''" >
-                changetime = #{changeTime, jdbcType=BIGINT},
-            </if>
             <if test="createTime != null and createTime != ''" >
                 createtime = #{createTime, jdbcType=BIGINT},
+            </if>
+            <choose>
+                <when test="changeTime != null and changeTime != ''" >
+                    changetime = #{changeTime, jdbcType=BIGINT},
+                </when>
+                <otherwise>
+                    changetime = unix_timestamp(now()) * 1000,
+                </otherwise>
+            </choose>
+            <if test="state != null and state != ''" >
+                state = #{state, jdbcType=VARCHAR},
             </if>
         </trim>
     </sql>
@@ -201,7 +206,8 @@
 
     <update id="deleteStateById" parameterType="Integer">
         UPDATE <include refid="Table_Name" />
-        set state = '1'
+        SET state = '1',
+        changetime = unix_timestamp(now()) * 1000
         <include refid="WhereOfId" />
     </update>
 

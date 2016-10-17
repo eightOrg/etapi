@@ -37,9 +37,6 @@ public abstract class BaseServiceImpl<T extends Identifiable> implements BaseSer
     @Override
     public JsonObject insert(JsonObject params) {
         Map obj = params.getMap();
-        if (obj == null) {
-            return JsonUtil.getFaildOb("插入元素不能为空!");
-        }
         MapUtil.setDefaultParams(obj);
         getBaseDao().insert(obj);
         return JsonUtil.getTrueOb();
@@ -85,14 +82,7 @@ public abstract class BaseServiceImpl<T extends Identifiable> implements BaseSer
      */
     @Override
     public JsonObject deleteById(JsonObject params) {
-        if (MapUtil.isEmpty(params, Constants.POJO_ID)) {
-            return JsonUtil.getFaildOb("元素不能为空！");
-        }
-        int id = (Integer) params.getValue(Constants.POJO_ID);
-        if (id <= 0) {
-            return JsonUtil.getFaildOb("元素id必须大于0！");
-        }
-        int count = getBaseDao().deleteById(id);
+        int count = getBaseDao().deleteById(params.getMap());
         return getResultBaseOb(count> 0, count + "个元素被删除", "删除元素失败，不含该元素");
     }
 
@@ -123,14 +113,7 @@ public abstract class BaseServiceImpl<T extends Identifiable> implements BaseSer
      */
     @Override
     public JsonObject deleteStateById(JsonObject params){
-        if (MapUtil.isEmpty(params, Constants.POJO_ID)) {
-            return JsonUtil.getFaildOb("元素不能为空！");
-        }
-        int id = (Integer) params.getValue(Constants.POJO_ID);
-        if (id <= 0){
-            return JsonUtil.getFaildOb("元素id必须大于0！");
-        }
-        int count = getBaseDao().deleteStateById(id);
+        int count = getBaseDao().deleteStateById(params.getMap());
         return getResultBaseOb(count> 0, count + "个元素被禁用", "禁用元素失败");
     }
 

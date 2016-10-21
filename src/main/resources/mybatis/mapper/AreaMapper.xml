@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eight.dao.AreaDao">
+    <resultMap id="BaseResultMap" type="com.eight.pojo.Area" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="parid" property="parId" jdbcType="INTEGER" />
+        <result column="areaname" property="areaName" jdbcType="VARCHAR" />
+        <result column="pyname" property="pyName" jdbcType="VARCHAR" />
+        <result column="zipcode" property="zipCode" jdbcType="VARCHAR" />
+        <result column="areatype" property="areaType" jdbcType="VARCHAR" />
+        <result column="special" property="special" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Table_Name">
+        et_area
+    </sql>
+
+    <sql id="Base_Column_List">
+        id, parid, areaname, pyname, zipcode, areatype, special
+    </sql>
+
+    <sql id="Insert_Values">
+        VALUES (#{id}, #{parid}, #{areaname}, #{pyname}, #{zipcode}, #{areatype}, #{special})
+    </sql>
+
+    <sql id="Set_Values">
+        <trim prefix="set" suffixOverrides="," >
+            <if test="parId != null" >
+                parid = #{parId, jdbcType=INTEGER},
+            </if>
+            <if test="areaName != null" >
+                areaname = #{areaName, jdbcType=VARCHAR},
+            </if>
+            <if test="pyName != null" >
+                pyname = #{pyName, jdbcType=VARCHAR},
+            </if>
+            <if test="zipCode != null" >
+                zipcode = #{zipCode, jdbcType=VARCHAR},
+            </if>
+            <if test="areaType != null" >
+                areatype = #{areaType, jdbcType=VARCHAR},
+            </if>
+            <if test="special != null" >
+                special = #{special, jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </sql>
+
+    <sql id="WhereOfMap">
+        <trim prefix="where" prefixOverrides="and" >
+            <if test="id != null" >
+                and id = #{id, jdbcType=INTEGER}
+            </if>
+            <if test="parId != null" >
+                and parid = #{parId, jdbcType=INTEGER}
+            </if>
+            <if test="areaName != null" >
+                and areaname = #{areaName, jdbcType=VARCHAR}
+            </if>
+            <if test="pyName != null" >
+                and pyname = #{pyName, jdbcType=VARCHAR}
+            </if>
+            <if test="zipCode != null" >
+                and zipcode = #{zipCode, jdbcType=VARCHAR}
+            </if>
+            <if test="areaType != null" >
+                and areatype = #{areaType, jdbcType=VARCHAR}
+            </if>
+            <if test="special != null" >
+                and special = #{special, jdbcType=VARCHAR}
+            </if>
+        </trim>
+    </sql>
+
+    <sql id="WhereOfId">
+        WHERE id = #{id, jdbcType=INTEGER}
+    </sql>
+
+    <sql id="OrderBy">
+        <if test="sortMap != null" >
+            <foreach item="value" collection="sortMap" separator="," open="order by " index="key">
+                #{key} #{value}
+            </foreach>
+        </if>
+    </sql>
+
+    <insert id="insert"  parameterType="Map" useGeneratedKeys="true" keyProperty="id">
+        INSERT <include refid="Table_Name" />
+        (<include refid="Base_Column_List" />)
+        <include refid="Insert_Values" />
+    </insert>
+
+    <delete id="delete" parameterType="Map">
+        DELETE FROM <include refid="Table_Name" />
+        <include refid="WhereOfMap" />
+    </delete>
+
+    <delete id="deleteById" parameterType="Integer">
+        DELETE FROM <include refid="Table_Name" />
+        <include refid="WhereOfId" />
+    </delete>
+
+    <update id="deleteStateById" parameterType="Integer">
+        UPDATE <include refid="Table_Name" />
+        SET state = '1',
+        changetime = unix_timestamp(now()) * 1000
+        <include refid="WhereOfId" />
+    </update>
+
+    <update id="update" parameterType="Map">
+        UPDATE <include refid="Table_Name" />
+        <include refid="Set_Values" />
+        <include refid="WhereOfId" />
+    </update>
+
+    <select id="selectCount" parameterType="Map" resultType="Long">
+        SELECT COUNT(1)
+        FROM <include refid="Table_Name" />
+        <include refid="WhereOfMap" />
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap" parameterType="Integer">
+        SELECT <include refid="Base_Column_List" />
+        FROM <include refid="Table_Name" />
+        <include refid="WhereOfId" />
+    </select>
+
+    <select id="selectList" resultMap="BaseResultMap" parameterType="Map">
+        SELECT <include refid="Base_Column_List" />
+        FROM <include refid="Table_Name" />
+        <include refid="WhereOfMap" />
+    </select>
+
+    <select id="selectTopList" resultMap="BaseResultMap" parameterType="Map">
+        SELECT <include refid="Base_Column_List" />
+        FROM <include refid="Table_Name" />
+        <include refid="WhereOfMap" />
+        <include refid="OrderBy" />
+        LIMIT #{limit}
+    </select>
+
+    <select id="selectOne" resultMap="BaseResultMap" parameterType="Map">
+        SELECT <include refid="Base_Column_List" />
+        FROM <include refid="Table_Name" />
+        <include refid="WhereOfMap" />
+        <include refid="OrderBy" />
+        LIMIT 1
+    </select>
+
+    <select id="selectPageList" resultMap="BaseResultMap" parameterType="Map">
+        SELECT <include refid="Base_Column_List" />
+        FROM <include refid="Table_Name" />
+        <include refid="WhereOfMap" />
+    </select>
+
+</mapper>

@@ -3,7 +3,6 @@
 <mapper namespace="com.eight.dao.UserRegisterDao">
     <resultMap id="BaseResultMap" type="com.eight.pojo.UserRegister" >
         <id column="mobilephone" property="mobilephone" jdbcType="VARCHAR" />
-        <result column="password" property="password" jdbcType="VARCHAR" />
         <result column="code" property="code" jdbcType="VARCHAR" />
         <result column="state" property="state" jdbcType="VARCHAR" />
         <result column="createtime" property="createTime" jdbcType="BIGINT" />
@@ -14,18 +13,15 @@
     </sql>
 
     <sql id="Base_Column_List">
-        mobilephone, password, code, state, createtime
+        mobilephone, code, state, createtime
     </sql>
 
     <sql id="Insert_Values">
-        VALUES (#{mobilephone}, #{password}, #{code}, #{state}, #{createTime})
+        VALUES (#{mobilephone}, #{code}, #{state}, #{createTime})
     </sql>
 
     <sql id="Set_Values">
         <trim prefix="set" suffixOverrides="," >
-            <if test="password != null" >
-                password = #{password, jdbcType=VARCHAR},
-            </if>
             <if test="code != null" >
                 code = #{code, jdbcType=VARCHAR},
             </if>
@@ -42,9 +38,6 @@
         <trim prefix="where" prefixOverrides="and" >
             <if test="mobilephone != null" >
                 and mobilephone = #{mobilephone, jdbcType=VARCHAR}
-            </if>
-            <if test="password != null" >
-                and password = #{password, jdbcType=VARCHAR}
             </if>
             <if test="code != null" >
                 and code = #{code, jdbcType=VARCHAR}
@@ -94,7 +87,6 @@
     <update id="deleteStateById" parameterType="String">
         UPDATE <include refid="Table_Name" />
         SET state = '1',
-        changetime = unix_timestamp(now()) * 1000
         <include refid="WhereOfId" />
     </update>
 

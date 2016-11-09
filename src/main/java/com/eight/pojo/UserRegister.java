@@ -10,7 +10,6 @@ import java.io.Serializable;
  */
 public class UserRegister extends BasePojo {
     private String mobilephone;
-    private String password;
     private String code;
     private long createTime;
     private String state;
@@ -21,14 +20,6 @@ public class UserRegister extends BasePojo {
 
     public void setMobilephone(String mobilephone) {
         this.mobilephone = mobilephone;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getCode() {

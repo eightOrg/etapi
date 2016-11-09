@@ -67,6 +67,11 @@
                     $('#test').click();
                 }
             });
+            $('#key').bind('keypress',function(event){
+                if(event.keyCode == "13") {
+                    $('#submit').click();
+                }
+            });
         });
 
         //保存cookie
@@ -91,10 +96,11 @@
             $('#my-prompt').modal({
                 relatedTarget: this,
                 onConfirm: function(e) {
-                    addKVByName(e.data);
+                    if (e.data) {
+                        addKVByName(e.data);
+                    }
                 },
                 onCancel: function(e) {
-                    return;
                 }
             });
         }
@@ -127,10 +133,6 @@
                     div.removeChild(children[i-1]);
                 }
             }
-        }
-
-        function getNameList(div) {
-
         }
     </script>
 </head>
@@ -177,14 +179,14 @@
     </div>
 
     <div class="am-modal am-modal-prompt" tabindex="-1" id="my-prompt" style="display: none">
-        <div class="am-modal-dialog">
+        <div class="am-modal-dialog" style="width: 300px">
             <div class="am-modal-bd">
                 设置name：
-                <input type="text" class="am-modal-prompt-input" name="key">
+                <input type="text" class="am-modal-prompt-input" name="key" id="key">
             </div>
             <div class="am-modal-footer">
-                <span class="am-modal-btn" data-am-modal-cancel>取消</span>
-                <span class="am-modal-btn" data-am-modal-confirm>提交</span>
+                <span class="am-modal-btn" data-am-modal-confirm id="submit">确定</span>
+                <span class="am-modal-btn" data-am-modal-cancel >取消</span>
             </div>
         </div>
     </div>

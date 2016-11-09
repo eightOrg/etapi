@@ -29,17 +29,20 @@
     <script src="assets/js/amazeui.min.js" type="text/javascript"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            var apiAddress = 'user/selectOne';
-            var method = 'get';
-
+            var method = $.cookie("method");
+            var keys_values = $.cookie("keys_values");
             $("input[name='apiAddress']").val($.cookie("address"));
-
-            /*$("input[name='apiAddress']").val(apiAddress);
-            $("input[name='kv']").val(kv);*/
             if (method == 'post') {
                 $("input:radio[name='method']").eq(1).attr("checked",true);
             }
-
+            if (keys_values) {
+                var kvs = keys_values.split(",");
+                console.log(keys_values);
+                console.log(kvs);
+                for (var i=0; i<kvs.length; i++) {
+                    addKVByName(kvs[i]);
+                }
+            }
             $("#test").on('click',function () {
                 var method =  $("input[name='method']:checked").val();
                 var address =  $("input[name='apiAddress']").val();
@@ -69,7 +72,18 @@
         //保存cookie
         function saveCookie() {
             var address =  $("input[name='apiAddress']").val();
+            var method =   $("input:radio[name='method']:checked").val();
+            var keys_values =   document.getElementById("keys&values").childNodes;
+            var kvs = new Array();
+            for (var i=0;i<keys_values.length;i++) {
+                if (keys_values[i].nodeName == "INPUT") {
+                    kvs.push(keys_values[i].getAttribute("name"));
+                }
+            }
+            console.log(keys_values);
             $.cookie("address", address, { expires: 7 }); // 存储一个带7天期限的 cookie
+            $.cookie("method", method, { expires: 7 }); // 存储一个带7天期限的 cookie
+            $.cookie("keys_values", kvs.join(","), { expires: 7 }); // 存储一个带7天期限的 cookie
         }
 
         var focusName;
@@ -77,19 +91,7 @@
             $('#my-prompt').modal({
                 relatedTarget: this,
                 onConfirm: function(e) {
-                    var div = document.getElementById("keys&values");
-                    var label = document.createElement("label");
-                    var label_text = document.createTextNode(e.data + ": ");
-                    label.appendChild(label_text);
-                    var input = document.createElement("input");
-                    input.setAttribute("type", "text");
-                    input.setAttribute("name", e.data);
-                    //设置焦点事件
-                    input.onfocus = function () {
-                        focusName = this.getAttribute("name");
-                    }
-                    div.appendChild(label);
-                    div.appendChild(input);
+                    addKVByName(e.data);
                 },
                 onCancel: function(e) {
                     return;
@@ -97,7 +99,23 @@
             });
         }
 
-        function delKV() {
+        function addKVByName(name) {
+            var div = document.getElementById("keys&values");
+            var label = document.createElement("label");
+            var label_text = document.createTextNode(name + ": ");
+            label.appendChild(label_text);
+            var input = document.createElement("input");
+            input.setAttribute("type", "text");
+            input.setAttribute("name", name);
+            //设置焦点事件
+            input.onfocus = function () {
+                focusName = this.getAttribute("name");
+            }
+            div.appendChild(label);
+            div.appendChild(input);
+        }
+
+        function delKVByName(focusName) {
             if (!focusName) {
                 return false;
             }
@@ -109,6 +127,10 @@
                     div.removeChild(children[i-1]);
                 }
             }
+        }
+
+        function getNameList(div) {
+
         }
     </script>
 </head>
@@ -129,7 +151,7 @@
             <div class="am-btn-toolbar">
                 <div class="am-btn-group am-btn-group-lg">
                     <button type="button" class="am-btn am-btn-success" onclick="addKV()">+</button>
-                    <button type="button" class="am-btn am-btn-danger" onclick="delKV()">-</button>
+                    <button type="button" class="am-btn am-btn-danger" onclick="delKVByName(focusName)">-</button>
                 </div>
             </div>
             <div id="keys&values"></div>

@@ -37,8 +37,6 @@
             }
             if (keys_values) {
                 var kvs = keys_values.split(",");
-                console.log(keys_values);
-                console.log(kvs);
                 for (var i=0; i<kvs.length; i++) {
                     addKVByName(kvs[i]);
                 }
@@ -46,11 +44,14 @@
             $("#test").on('click',function () {
                 var method =  $("input[name='method']:checked").val();
                 var address =  $("input[name='apiAddress']").val();
+                var form = document.getElementById("testApi");
+                var form_data = getInputNameValue(form);
                 saveCookie();
                 $.ajax({
                     type: method,
                     url: getApiPath(address),
-                    data: $("#testApi").serialize,
+                    data: form_data,
+                    headers: {"Dev": "pc"},
                     dataType: "json",
                     success: function(data) {
                         console.log(data);
@@ -85,7 +86,6 @@
                     kvs.push(keys_values[i].getAttribute("name"));
                 }
             }
-            console.log(keys_values);
             $.cookie("address", address, { expires: 7 }); // 存储一个带7天期限的 cookie
             $.cookie("method", method, { expires: 7 }); // 存储一个带7天期限的 cookie
             $.cookie("keys_values", kvs.join(","), { expires: 7 }); // 存储一个带7天期限的 cookie
@@ -133,6 +133,17 @@
                     div.removeChild(children[i-1]);
                 }
             }
+        }
+        
+        function getInputNameValue(form) {
+            var keyvalues = {};
+            var inputs = form.getElementsByTagName("input");
+            for (var i=0; i<inputs.length; i++) {
+                if (inputs[i].getAttribute("type") == "text") {
+                    keyvalues[inputs[i].getAttribute("name")] =  inputs[i].value;
+                }
+            }
+            return keyvalues;
         }
     </script>
 </head>
